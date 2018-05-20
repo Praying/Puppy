@@ -1,0 +1,14 @@
+syntax = "proto3";
+import "Cmd.proto";
+
+enum ClientParam {
+    CLIENT_PARAM_NULL = 0;
+    CLIENT_PARAM_LOGIN_AUTH = 1;
+}
+
+message LoginCmd {
+    CommandType cmd = 1;
+    ClientParam param = 2;
+    string username = 3;
+    string password = 4;
+}

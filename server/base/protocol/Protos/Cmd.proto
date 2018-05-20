@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+enum CommandType {
+    COMMAND_TYPE_NULL = 0; //无效的Cmd
+    COMMAND_TYPE_CLIENT = 1; //客户端的协议
+    COMMAND_TYPE_SERVER = 2; //服务器之间的协议
+}
