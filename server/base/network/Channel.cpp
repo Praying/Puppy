@@ -2,12 +2,12 @@
 * Created by ABC on 2018/4/14.
 */
 
-#include <base/Protocol/OpcodesManager.hpp>
-#include <base/Protocol/ProtosGen/Cmd.pb.h>
+#include <base/protocol/OpcodesManager.hpp>
+#include <base/protocol/ProtosGen/Cmd.pb.h>
 #include <base/common/Util.hpp>
 #include "Channel.hpp"
 #include "base/common/Errors.hpp"
-#include <base/Protocol/ProtosGen/ClientCmd.pb.h>
+#include <base/protocol/ProtosGen/ClientCmd.pb.h>
 
 namespace Flow
 {

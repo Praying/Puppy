@@ -41,8 +41,8 @@ namespace Flow
             typedef std::vector<ChannelPtr> ChannelContainer;
             ChannelContainer channels_;
             ChannelContainer newChannels_;
-            std::atomic<uint32_t> connectionNum_ = 0;
-            std::atomic<bool> stopped_ = false;
+            std::atomic<uint32_t> connectionNum_ ;
+            std::atomic<bool> stopped_;
             std::thread *threadPtr_ = nullptr;
             std::mutex newChannelsMutex_;
             asio::io_context ioContext_;

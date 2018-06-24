@@ -4,6 +4,7 @@ project(server)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include(deps)
 include(functions)
 
 add_subdirectory(base)
