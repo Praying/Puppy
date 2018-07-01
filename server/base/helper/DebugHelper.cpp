@@ -5,8 +5,9 @@
 
 #include "DebugHelper.hpp"
 #include <iostream>
-#include <log4cxx/helpers/exception.h>
-#include <log4cxx/propertyconfigurator.h>
+/*#include <log4cxx/helpers/exception.h>
+
+#include <log4cxx/propertyconfigurator.h>*/
 #include <base/resource_mgr/ResourceMgr.hpp>
 
 
@@ -79,7 +80,7 @@ namespace Flow
     FLOW_SINGLETON_IMP(DebugHelper);
 
     DebugHelper::DebugHelper()
-    :logger_(log4cxx::Logger::getLogger(""))
+    //:logger_(log4cxx::Logger::getLogger(""))
     {
 
     }
@@ -91,37 +92,37 @@ namespace Flow
 
     void DebugHelper::infoMsg(const std::string &msg)
     {
-        FLOW_LOG4CXX_INFO(logger_, msg);
+    //    FLOW_LOG4CXX_INFO(logger_, msg);
     }
 
     void DebugHelper::debugMsg(const std::string &msg)
     {
-        FLOW_LOG4CXX_DEBUG(logger_, msg);
+  //      FLOW_LOG4CXX_DEBUG(logger_, msg);
     }
 
     void DebugHelper::warnMsg(const std::string &msg)
     {
-        FLOW_LOG4CXX_WARN(logger_, msg);
+//        FLOW_LOG4CXX_WARN(logger_, msg);
     }
 
     void DebugHelper::errorMsg(const std::string &msg)
     {
-        FLOW_LOG4CXX_ERROR(logger_, msg);
+//        FLOW_LOG4CXX_ERROR(logger_, msg);
     }
 
     void DebugHelper::fatalMsg(const std::string &msg)
     {
-        FLOW_LOG4CXX_FATAL(logger_, msg);
+//        FLOW_LOG4CXX_FATAL(logger_, msg);
     }
 
     void DebugHelper::initialize(Common::ComponentType componentType)
     {
-        std::string appName = Common::getComponentNameByType(componentType);
-        std::string appConfigName = appName + ".properties";
-        auto configPath = ResourceMgr::instance()->matchResource(appConfigName);
-        if(configPath)
-            log4cxx::PropertyConfigurator::configure((*configPath));
-        logger_ = log4cxx::Logger::getRootLogger();
+//        std::string appName = Common::getComponentNameByType(componentType);
+//        std::string appConfigName = appName + ".properties";
+//        auto configPath = ResourceMgr::instance()->matchResource(appConfigName);
+//        if(configPath)
+//            log4cxx::PropertyConfigurator::configure((*configPath));
+//        logger_ = log4cxx::Logger::getRootLogger();
     }
 
 }

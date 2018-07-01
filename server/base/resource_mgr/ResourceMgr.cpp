@@ -6,14 +6,14 @@
 #include "ResourceMgr.hpp"
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
-#include <experimental/optional>
+#include <optional>
 namespace Flow
 {
     FLOW_SINGLETON_IMP(ResourceMgr)
 
-    std::experimental::optional<std::string> ResourceMgr::matchResource(const std::string &fileName)
+    std::optional<std::string> ResourceMgr::matchResource(const std::string &fileName)
     {
-        std::experimental::optional<std::string> result;
+        std::optional<std::string> result;
         namespace bfs = boost::filesystem;
         std::string exePath = bfs::initial_path<bfs::path>().string();
         boost::iterator_range<std::string::iterator> itRange = boost::find_last(exePath, "Flow");
@@ -27,7 +27,7 @@ namespace Flow
             return e.path().filename() == fileName;
         });
         if (it != end)
-            result=std::experimental::optional<std::string>(it->path().string());
+            result=std::optional<std::string>(it->path().string());
         return result;
     }
 

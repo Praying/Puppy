@@ -3,7 +3,7 @@
 */
 
 #include "ChannelThread.hpp"
-
+#include <chrono>
 namespace Flow
 {
     namespace Network
@@ -33,7 +33,7 @@ namespace Flow
 
         void ChannelThread::run()
         {
-            updateTimer_.expires_from_now(boost::posix_time::milliseconds(10));
+            updateTimer_.expires_from_now(std::chrono::milliseconds(10));
             updateTimer_.async_wait(std::bind(&ChannelThread::update, this));
             ioContext_.run();
             newChannels_.clear();
@@ -44,7 +44,7 @@ namespace Flow
         {
             if (stopped_)
                 return;
-            updateTimer_.expires_from_now(boost::posix_time::milliseconds(10));
+            updateTimer_.expires_from_now(std::chrono::milliseconds(10));
             updateTimer_.async_wait(std::bind(&ChannelThread::update, this));
             addNewChannels();
             channels_.erase(std::remove_if(channels_.begin(), channels_.end(), [this](ChannelPtr channelPtr)

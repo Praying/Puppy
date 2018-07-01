@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <asio/deadline_timer.hpp>
+#include <asio/steady_timer.hpp>
 #include "Channel.hpp"
 
 namespace Flow
@@ -47,7 +47,7 @@ namespace Flow
             std::mutex newChannelsMutex_;
             asio::io_context ioContext_;
             asio::ip::tcp::socket acceptSocket_;
-            asio::deadline_timer updateTimer_;
+            asio::steady_timer updateTimer_;
         };
     }
 }

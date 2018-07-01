@@ -7,7 +7,7 @@
 
 #include <folly/Singleton.h>
 #include <base/common/Define.hpp>
-#include <experimental/optional>
+#include <optional>
 #include <boost/filesystem.hpp>
 
 namespace Flow
@@ -19,7 +19,7 @@ namespace Flow
     protected:
         ResourceMgr();
     public:
-        std::experimental::optional<std::string> matchResource(const std::string& name);
+        std::optional<std::string> matchResource(const std::string& name);
     };
 
 }

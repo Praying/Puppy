@@ -43,7 +43,7 @@ namespace Flow
     {
 
     }
-#if !defined(__WIN32)
+#if !defined(_WINDOWS)
     void ServerInfo::fetchLinuxCpuInfo()
     {
         FILE* pProcCpu;
