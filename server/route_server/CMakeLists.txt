@@ -6,6 +6,6 @@ target_link_libraries(${APP_NAME})
 set_target_properties(${APP_NAME} PROPERTIES
         ARCHIVE_OUTPUT_DIRECTORY ${BinOutPutDir}
         RUNTIME_OUTPUT_DIRECTORY ${BinOutPutDir}
-        LIBRARY_OUTPUT_DIRECTORY ${LibOutPutDir})
+        LIBRARY_OUTPUT_DIRECTORY ${BinOutPutDir})
 
-target_link_libraries(${APP_NAME} base.lib)
+target_link_libraries(${APP_NAME} msgproto.lib base.lib)

@@ -8,3 +8,6 @@ else()
     set(BinOutPutDir ${PROJECT_SOURCE_DIR}/bin/release)
     set(LibOutPutDir ${PROJECT_SOURCE_DIR}/lib/release)
 endif()
+
+#set(EXECUTABLE_OUTPUT_PATH ${BinOutPutDir})
+#set(LIBRARY_OUTPUT_PATH ${LibOutPutDir})
