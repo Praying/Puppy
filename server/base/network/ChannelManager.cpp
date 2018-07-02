@@ -236,7 +236,7 @@ namespace Flow
             return minIndex;
         }
 
-        std::pair<asio::ip::tcp::socket *, uint32_t> ChannelManager::getSocketForAccept()
+        std::tuple<asio::ip::tcp::socket *, uint32_t> ChannelManager::getSocketForAccept()
         {
             uint32_t threadIndex = selectThreadWithMinConnections();
 

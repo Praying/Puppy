@@ -28,10 +28,9 @@ namespace Flow
             template<AcceptCallback callback>
             void asyncAcceptWithCallback()
             {
-                asio::ip::tcp::socket *socketPtr;
-                uint32_t threadIndex = 0;
-                std::tie(socketPtr,
-                         threadIndex) = ChannelManager::instance()->getSocketForAccept();//newSocketFactory_();
+               // asio::ip::tcp::socket *socketPtr;
+                //uint32_t threadIndex = 0;
+                auto[socketPtr, threadIndex] = ChannelManager::instance()->getSocketForAccept();//newSocketFactory_();
                 acceptor_.async_accept(*socketPtr, [this, socketPtr, threadIndex](asio::error_code error)
                 {
                     if (!error)

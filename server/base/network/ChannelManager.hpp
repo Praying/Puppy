@@ -43,7 +43,7 @@ namespace Flow
 
             uint32_t selectThreadWithMinConnections();
 
-            std::pair<asio::ip::tcp::socket *, uint32_t> getSocketForAccept();
+            std::tuple<asio::ip::tcp::socket *, uint32_t> getSocketForAccept();
 
             ChannelThread *createThreads();
 
