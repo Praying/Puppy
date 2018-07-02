@@ -3,7 +3,7 @@
  * Copyright (c) 2018 Flow. All rights reserved.
  */
 
-#include <base/protocol/CmdProcessor.hpp>
+#include <proto/CmdProcessor.hpp>
 
 namespace Flow
 {

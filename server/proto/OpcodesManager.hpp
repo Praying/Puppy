@@ -6,7 +6,7 @@
 #pragma once
 #include <folly/Singleton.h>
 #include <base/common/Define.hpp>
-#include <base/protocol/Opcodes.hpp>
+#include <proto/Opcodes.hpp>
 
 namespace Flow
 {

@@ -3,10 +3,10 @@
  * Copyright (c) 2018 Flow. All rights reserved.
  */
 
-#include <base/protocol/Opcodes.hpp>
+#include <proto/Opcodes.hpp>
 #include <base/helper/DebugHelper.hpp>
-#include <base/protocol/ProtosGen/Cmd.pb.h>
-#include <base/protocol/ProtosGen/ClientCmd.pb.h>
+#include <proto/ProtosGen/Cmd.pb.h>
+#include <proto/ProtosGen/ClientCmd.pb.h>
 #include <base/network/Channel.hpp>
 
 

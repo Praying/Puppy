@@ -8,6 +8,7 @@ include(path)
 include(deps)
 include(functions)
 
+add_subdirectory(proto)
 add_subdirectory(base)
 add_subdirectory(db_proxy_server)
 add_subdirectory(file_server)
