@@ -4,6 +4,8 @@ set(APP_NAME "route_server")
 add_executable(${APP_NAME} ${BASE_HPP} ${BASE_CPP})
 target_link_libraries(${APP_NAME})
 set_target_properties(${APP_NAME} PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY ${OutPutDir}
-        RUNTIME_OUTPUT_DIRECTORY ${OutPutDir}
-        LIBRARY_OUTPUT_DIRECTORY ${OutPutDir})
+        ARCHIVE_OUTPUT_DIRECTORY ${BinOutPutDir}
+        RUNTIME_OUTPUT_DIRECTORY ${BinOutPutDir}
+        LIBRARY_OUTPUT_DIRECTORY ${LibOutPutDir})
+
+target_link_libraries(${APP_NAME} base.lib)

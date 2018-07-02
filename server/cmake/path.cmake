@@ -2,7 +2,9 @@
 set(SolutionDir ${PROJECT_SOURCE_DIR})
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(OutPutDir ${PROJECT_SOURCE_DIR}/bin/debug)
+    set(BinOutPutDir ${PROJECT_SOURCE_DIR}/bin/debug)
+    set(LibOutPutDir ${PROJECT_SOURCE_DIR}/lib/debug)
 else()
-    set(OutPutDir ${PROJECT_SOURCE_DIR}/bin/release)
+    set(BinOutPutDir ${PROJECT_SOURCE_DIR}/bin/release)
+    set(LibOutPutDir ${PROJECT_SOURCE_DIR}/lib/release)
 endif()

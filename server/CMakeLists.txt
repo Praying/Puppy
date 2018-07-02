@@ -6,7 +6,10 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include(path)
 include(deps)
+include(flags)
 include(functions)
+
+link_directories(${LibOutPutDir})
 
 add_subdirectory(proto)
 add_subdirectory(base)

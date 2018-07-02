@@ -3,6 +3,6 @@ auto_sources(BASE_CPP "*.cpp" "RECURSE" "${CMAKE_CURRENT_SOURCE_DIR}")
 set(APP_NAME "msgproto")
 add_library(${APP_NAME} ${BASE_HPP} ${BASE_CPP})
 set_target_properties(${APP_NAME} PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY ${OutPutDir}
-        RUNTIME_OUTPUT_DIRECTORY ${OutPutDir}
-        LIBRARY_OUTPUT_DIRECTORY ${OutPutDir})
+        ARCHIVE_OUTPUT_DIRECTORY ${LibOutPutDir}
+        RUNTIME_OUTPUT_DIRECTORY ${LibOutPutDir}
+        LIBRARY_OUTPUT_DIRECTORY ${LibOutPutDir})
