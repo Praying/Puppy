@@ -5,11 +5,9 @@
 
 #include "DebugHelper.hpp"
 #include <iostream>
-/*#include <log4cxx/helpers/exception.h>
-
-#include <log4cxx/propertyconfigurator.h>*/
 #include <base/resource_mgr/ResourceMgr.hpp>
-
+#include <iostream>
+#include <spdlog/async.h>
 
 #define FLOW_LOG4CXX_INFO(logger, str) \
 {\
@@ -115,14 +113,25 @@ namespace Flow
 //        FLOW_LOG4CXX_FATAL(logger_, msg);
     }
 
-    void DebugHelper::initialize(Common::ComponentType componentType)
+    bool DebugHelper::initialize(Common::ComponentType componentType)
     {
-//        std::string appName = Common::getComponentNameByType(componentType);
-//        std::string appConfigName = appName + ".properties";
-//        auto configPath = ResourceMgr::instance()->matchResource(appConfigName);
-//        if(configPath)
-//            log4cxx::PropertyConfigurator::configure((*configPath));
-//        logger_ = log4cxx::Logger::getRootLogger();
+        try {
+            std::string appName = Common::getComponentNameByType(componentType);
+            logger_ = spdlog::daily_logger_mt<spdlog::create_async>(appName, "logs/daily.txt", 2, 30) ;
+            logger_->flush_on(spdlog::level::err);
+            spdlog::set_pattern("[%^+++%$] [%H:%M:%S %z] [thread %t] %v");
+            spdlog::set_level(spdlog::level::debug);
+            logger_->error(2);
+
+        }catch (const spdlog::spdlog_ex& ex){
+            std::cout<<"Log init failed: " << ex.what() << std::endl;
+            return false;
+        }
+        return true;
+    }
+
+    std::shared_ptr<spdlog::logger> DebugHelper::getLogger() {
+        return logger_;
     }
 
 }
