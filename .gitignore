@@ -3,3 +3,5 @@ server/.idea
 server/build
 server/bin
 server/lib
+CMakeFiles/
+CMakeCache.txt

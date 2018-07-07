@@ -36,10 +36,7 @@ namespace Flow
 
     #define __FILENAME__ (strrchr(__FILE__, '/') ? (strrchr(__FILE__, '/') + 1) : __FILE__)
 
-#define FLOW_INFO DebugHelper::instance()->getLogger()->info
-#define FLOW_DEBUG DebugHelper::instance()->getLogger()->debug
-#define FLOW_WARN DebugHelper::instance()->getLogger()->warn
-#define FLOW_ERROR DebugHelper::instance()->getLogger()->error
+
 
 /*#ifdef _WINDOWS_
     #define FLOW_INFO(str, ...) DebugHelper::instance()->infoMsg(fmt::format(std::string("[{}|{}|{}] ")+str, __FILENAME__, __LINE__, __FUNCTION__,##__VA_ARGS__))
@@ -53,6 +50,19 @@ namespace Flow
     #define FLOW_ERROR(str, args...) DebugHelper::instance()->errorMsg(fmt::format(std::string("[{}|{}|{}] ")+str, __FILENAME__, __LINE__, __FUNCTION__, ##args))
 
 #endif*/
+
+#ifdef _WINDOWS_
+    #define FLOW_INFO(str, ...) DebugHelper::instance()->infoMsg(fmt::format(std::string("[{}|{}|{}] ")+str, __FILENAME__, __LINE__, __FUNCTION__,##__VA_ARGS__))
+    #define FLOW_DEBUG(str, ...) DebugHelper::instance()->debugMsg(fmt::format(std::string("[{}|{}|{}] ")+str, __FILENAME__, __LINE__, __FUNCTION__, ##__VA_ARGS__))
+    #define FLOW_WARN(str, ...) DebugHelper::instance()->warnMsg(fmt::format(std::string("[{}|{}|{}] ")+str, __FILENAME__, __LINE__, __FUNCTION__, ##__VA_ARGS__))
+    #define FLOW_ERROR(str, ...) DebugHelper::instance()->errorMsg(fmt::format(std::string("[{}|{}|{}] ")+str, __FILENAME__, __LINE__, __FUNCTION__, ##__VA_ARGS__))
+#else
+    #define FLOW_INFO(str, args...) DebugHelper::instance()->infoMsg(fmt::format(std::string("[{}|{}|{}] ")+str, __FILENAME__, __LINE__, __FUNCTION__, ##args))
+    #define FLOW_DEBUG(str, args...) DebugHelper::instance()->debugMsg(fmt::format(std::string("[{}|{}|{}] ")+str, __FILENAME__, __LINE__, __FUNCTION__, ##args))
+    #define FLOW_WARN(str, args...) DebugHelper::instance()->warnMsg(fmt::format(std::string("[{}|{}|{}] ")+str, __FILENAME__, __LINE__, __FUNCTION__, ##args))
+    #define FLOW_ERROR(str, args...) DebugHelper::instance()->errorMsg(fmt::format(std::string("[{}|{}|{}] ")+str, __FILENAME__, __LINE__, __FUNCTION__, ##args))
+
+#endif
 
 }
 
