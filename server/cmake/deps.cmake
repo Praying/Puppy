@@ -1,6 +1,6 @@
 find_package(glog CONFIG REQUIRED)
 find_package(folly CONFIG REQUIRED)
-find_package(TBB CONFIG REQUIRED)
+#find_package(TBB CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(protobuf CONFIG REQUIRED)

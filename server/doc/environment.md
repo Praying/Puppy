@@ -12,3 +12,14 @@
 ./vcpkg install fmt:x64-windows
 ./vcpkg install protobuf:x64-windows
 ```
+    - for Linux
+```
+sudo apt install libpthread-stubs0-dev -y
+sudo apt install libevent-dev -y #folly will link it 
+./vcpkg install spdlog
+./vcpkg install folly
+./vcpkg install asio
+./vcpkg install boost-property-tree
+./vcpkg install protobuf
+
+```

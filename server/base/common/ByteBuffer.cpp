@@ -8,6 +8,7 @@
 #include <base/helper/DebugHelper.hpp>
 #include <ctime>
 #include <cmath>
+#include <stdint.h>
 
 namespace Flow
 {
