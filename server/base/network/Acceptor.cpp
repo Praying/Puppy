@@ -61,7 +61,7 @@ namespace Flow
             return;
         }
 
-        void Acceptor::setSocketFactory(std::function<std::pair<asio::ip::tcp::socket *, uint32_t>()> func)
+        void Acceptor::setSocketFactory(std::function<std::tuple<asio::ip::tcp::socket *, uint32_t>()> func)
         {
             socketFactory_ = func;
         }

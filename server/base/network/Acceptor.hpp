@@ -49,19 +49,19 @@ namespace Flow
 
             void close();
 
-            void setSocketFactory(std::function<std::pair<asio::ip::tcp::socket *, uint32_t>()> func);
+            void setSocketFactory(std::function<std::tuple<asio::ip::tcp::socket *, uint32_t>()> func);
 
         private:
-            std::pair<asio::ip::tcp::socket *, uint32_t> defaultSocketFactory()
+            std::tuple<asio::ip::tcp::socket *, uint32_t> defaultSocketFactory()
             {
-                return std::make_pair(&socket_, 0);
+                return std::tuple<asio::ip::tcp::socket *, uint32_t>(&socket_, 0);
             }
 
             asio::ip::tcp::acceptor acceptor_;
             asio::ip::tcp::endpoint endpoint_;
             asio::ip::tcp::socket socket_;
             std::atomic<bool> closed_;
-            std::function<std::pair<asio::ip::tcp::socket *, uint32_t>()> socketFactory_;
+            std::function<std::tuple<asio::ip::tcp::socket *, uint32_t>()> socketFactory_;
         };
     }
 

@@ -79,8 +79,8 @@ namespace Flow
             }
 
             clientAcceptorPtr_ = acceptorPtr;
-            //std::function<std::pair<asio::ip::tcp::socket *, uint32_t>()> func = std::bind(&ChannelManager::getSocketForAccept, this);
-            //clientAcceptorPtr_->setSocketFactory(func);
+            std::function<std::tuple<asio::ip::tcp::socket *, uint32_t>()> func = std::bind(&ChannelManager::getSocketForAccept, this);
+            clientAcceptorPtr_->setSocketFactory(func);
             clientAcceptorPtr_->asyncAcceptWithCallback<&onClientSocketAccept>();
             //Listen on the server port
             try
