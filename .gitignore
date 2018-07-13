@@ -3,5 +3,6 @@ server/.idea
 server/build
 server/bin
 server/lib
+server/downloads
 CMakeFiles/
 CMakeCache.txt
