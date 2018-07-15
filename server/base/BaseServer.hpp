@@ -7,6 +7,7 @@
 
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <asio/io_context.hpp>
 
 namespace Flow{
     class BaseServer {
@@ -31,6 +32,7 @@ namespace Flow{
     private:
         boost::program_options::options_description configOptionsDesc_;
         boost::program_options::variables_map configVarMap_;
+        asio::io_context ioContext_;
     };
 }
 

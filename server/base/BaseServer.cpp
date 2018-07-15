@@ -6,6 +6,7 @@
 #include <boost/program_options.hpp>
 #include <iostream>
 #include <fstream>
+#include "base/network/ChannelManager.hpp"
 
 namespace Flow{
 
@@ -32,7 +33,8 @@ namespace Flow{
     }
 
     bool BaseServer::initNetwork() {
-        return false;
+   //     std::string ip = configVarMap_["BindAddress"].as<std::string>();
+   //     uint32_t port = configVarMap_["BindPort"].as<uint16_t >();
     }
 
     void BaseServer::update() {
@@ -47,7 +49,7 @@ namespace Flow{
         configOptionsDesc_.add_options()
                 ("help", "Displays this help dialog.")
                 ("BindAddress", boost::program_options::value<std::string>()->default_value("127.0.0.1"), "Network listen address.")
-                ("BindPort", boost::program_options::value<uint16_t>(), "Port the server listens for messages on.")
+                ("BindPort", boost::program_options::value<uint16_t>()->default_value(10000), "Port the server listens for messages on.")
                 ("ServiceMessageHeap", boost::program_options::value<uint32_t>()->default_value(8192), "")
                 ("GlobalMessageHeap", boost::program_options::value<uint32_t>()->default_value(8192), "")
                 ("DBServer", boost::program_options::value<std::string>()->default_value("localhost"), "Address of the MySQL Server.")
