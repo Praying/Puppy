@@ -14,9 +14,9 @@ namespace Flow{
     public:
         BaseServer();
 
-        void loadOptions(uint32_t argc, char** argv);
-        void loadOptions(std::list<std::string> configFiles);
-        void loadOptions(uint32_t argc, char **argv, std::list<std::string> configFiles);
+        bool loadOptions(uint32_t argc, char** argv);
+        bool loadOptions(std::list<std::string> configFiles);
+        bool loadOptions(uint32_t argc, char **argv, std::list<std::string> configFiles);
     public:
         virtual void initAction();
         virtual void runAction();

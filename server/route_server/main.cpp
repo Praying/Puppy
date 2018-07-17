@@ -1,8 +1,9 @@
 #include <base/BaseServer.hpp>
 #include <iostream>
-int main() {
+int main(int argc, char** argv) {
 
 	Flow::BaseServer server;
-	server.initAction();
+  if(server.loadOptions(argc, argv))
+  	server.initAction();
 	return 0;
 }

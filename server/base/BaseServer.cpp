@@ -72,7 +72,7 @@ namespace Flow{
 
     }
 
-    void BaseServer::loadOptions(uint32_t argc, char **argv) {
+    bool BaseServer::loadOptions(uint32_t argc, char **argv) {
         namespace popt = boost::program_options;
         popt::store(
                 popt::parse_command_line(argc,const_cast<const char* const*>(argv), configOptionsDesc_)
@@ -80,11 +80,12 @@ namespace Flow{
         popt::notify(configVarMap_);
         if(configVarMap_.count("help")){
             std::cout<< configOptionsDesc_<<std::endl;
-            throw std::runtime_error("Help option flagged.");
+            return false;
         }
+        return true; 
     }
 
-    void BaseServer::loadOptions(std::list<std::string> configFiles) {
+    bool BaseServer::loadOptions(std::list<std::string> configFiles) {
         // Iterate through the configuration files
         // that are to be loaded. If a configuration file
         // is missing, throw a runtime_error.
@@ -104,11 +105,12 @@ namespace Flow{
         if(configVarMap_.count("help"))
         {
             std::cout << configOptionsDesc_ << std::endl;
-            throw std::runtime_error("Help option flagged.");
+            return false;
         }
+        return true; 
     }
 
-    void BaseServer::loadOptions(uint32_t argc, char **argv, std::list<std::string> configFiles) {
+    bool BaseServer::loadOptions(uint32_t argc, char **argv, std::list<std::string> configFiles) {
         boost::program_options::store(boost::program_options::parse_command_line(argc, const_cast<const char* const *>(argv), configOptionsDesc_), configVarMap_);
 
         // Iterate through the configuration files
@@ -130,7 +132,8 @@ namespace Flow{
         if(configVarMap_.count("help"))
         {
             std::cout << configOptionsDesc_ << std::endl;
-            throw std::runtime_error("Help option flagged.");
+            return false;
         }
+        return true; 
     }
 }
