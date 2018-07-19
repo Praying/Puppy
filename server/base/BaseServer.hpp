@@ -7,7 +7,9 @@
 
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <boost/filesystem.hpp>
 #include <asio/io_context.hpp>
+#include <thread>
 
 namespace Flow{
     class BaseServer {
@@ -18,21 +20,28 @@ namespace Flow{
         bool loadOptions(std::list<std::string> configFiles);
         bool loadOptions(uint32_t argc, char **argv, std::list<std::string> configFiles);
     public:
-        virtual void initAction();
+        virtual void initConfig();
+        virtual bool initAction(int argc, char** argv);
         virtual void runAction();
         virtual void finishAction();
+        void stopNow();
 
     protected:
         virtual bool initOpCodeTable();
         virtual bool initNetwork();
-        virtual void update();
+        virtual void updateLoop();
         virtual bool finishNetwork();
         virtual void initConfigOptions();
+        virtual std::string getConfigFileName();
+
+        void signalHandler(const asio::error_code& error, int /*SignalNumber*/);
 
     private:
         boost::program_options::options_description configOptionsDesc_;
         boost::program_options::variables_map configVarMap_;
-        asio::io_context ioContext_;
+        std::shared_ptr<asio::io_context> ioContext_;
+        std::shared_ptr<std::vector<std::thread>> threadPool_;
+        std::atomic_bool stopEvent_ = false;
     };
 }
 

@@ -132,8 +132,8 @@ namespace Flow
                 socket_.set_option(asio::ip::tcp::no_delay(enable), err);
                 if (err)
                 {
-                    FLOW_ERROR("Socket::SetNoDelay,failed to set_option(asio::ip::tcp::no_delay) for {0} - {1} ({2})",
-                               getRemoteIpAddress().to_string(), err.value(), err.message());
+                    //FLOW_ERROR("Socket::SetNoDelay,failed to set_option(asio::ip::tcp::no_delay) for {0} - {1} ({2})",
+                    //           getRemoteIpAddress().to_string(), err.value(), err.message());
                 }
             }
 

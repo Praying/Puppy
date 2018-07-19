@@ -11,7 +11,6 @@ include(functions)
 
 link_directories(${LibOutPutDir})
 
-add_subdirectory(proto)
 add_subdirectory(base)
 add_subdirectory(db_proxy_server)
 add_subdirectory(file_server)

@@ -33,3 +33,4 @@ return instance_.try_get();\
 
 #define WORLD_SLEEP_CONST 50
 #define NUM_THREADS 4
+#define ROUTER_CONFIG "router_server.ini"

@@ -2,12 +2,12 @@
 * Created by ABC on 2018/4/14.
 */
 
-#include <proto/OpcodesManager.hpp>
-#include <proto/ProtosGen/Cmd.pb.h>
+#include <base/proto/OpcodesManager.hpp>
+#include <base/proto/ProtosGen/Cmd.pb.h>
 #include <base/common/Util.hpp>
 #include "Channel.hpp"
 #include "base/common/Errors.hpp"
-#include <proto/ProtosGen/ClientCmd.pb.h>
+#include <base/proto/ProtosGen/ClientCmd.pb.h>
 
 namespace Flow
 {
@@ -29,7 +29,7 @@ namespace Flow
             socket_.close(error);
             if (error)
             {
-                FLOW_ERROR("Socket close with error: {}", error.message());
+                //FLOW_ERROR("Socket close with error: {}", error.message());
             }
 
         }
@@ -81,9 +81,9 @@ namespace Flow
             socket_.shutdown(asio::socket_base::shutdown_send, shutdownError);
             if (shutdownError)
             {
-                FLOW_DEBUG("Socket::CloseSocket:{},errored when shutting down socket:%i ({})",
-                           getRemoteIpAddress().to_string().c_str(), shutdownError.value(),
-                           shutdownError.message().c_str());
+                //FLOW_DEBUG("Socket::CloseSocket:{},errored when shutting down socket:%i ({})",
+               //            getRemoteIpAddress().to_string().c_str(), shutdownError.value(),
+                //           shutdownError.message().c_str());
             }
         }
 
@@ -125,7 +125,7 @@ namespace Flow
                     packet.readCompleted(readHeaderSize);
                     if (headerBuffer_.getRemainingSpace() > 0)
                     {
-                        FLOW_ASSERT(packet.getActiveSize() == 0);
+                        //FLOW_ASSERT(packet.getActiveSize() == 0);
                         break;
                     }
                     if (!readHeaderHandler())
@@ -142,7 +142,7 @@ namespace Flow
                     packet.readCompleted(readDataSize);
                     if (packetBuffer_.getRemainingSpace() > 0)
                     {
-                        FLOW_ASSERT(packet.getActiveSize() == 0);
+                        //FLOW_ASSERT(packet.getActiveSize() == 0);
                         break;
                     }
                 }
@@ -160,7 +160,7 @@ namespace Flow
 
         bool Channel::readHeaderHandler()
         {
-            FLOW_ASSERT(headerBuffer_.getActiveSize() == MsgHead::HEAD_LENGTH);
+            //FLOW_ASSERT(headerBuffer_.getActiveSize() == MsgHead::HEAD_LENGTH);
             MsgHead head;
             head.decode((const char *) headerBuffer_.getReadPointer());
             packetBuffer_.resize(head.getBodyLength());

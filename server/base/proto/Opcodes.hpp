@@ -85,7 +85,7 @@ namespace Flow
             }
             catch(std::out_of_range& e)
             {
-               FLOW_ERROR("Not found opcode:{}", param);
+               //FLOW_ERROR("Not found opcode:{}", param);
                 return nullptr;
             }
 
@@ -99,7 +99,7 @@ namespace Flow
             }
             catch(std::out_of_range& e)
             {
-                FLOW_ERROR("Not found opcode:{}", param);
+                //FLOW_ERROR("Not found opcode:{}", param);
                 return nullptr;
             }
 

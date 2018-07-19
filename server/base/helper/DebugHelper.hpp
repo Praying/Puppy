@@ -59,7 +59,8 @@ namespace Flow
 #else
     #define FLOW_INFO(str, args...) DebugHelper::instance()->infoMsg(fmt::format(std::string("[{}|{}|{}] ")+str, __FILENAME__, __LINE__, __FUNCTION__, ##args))
     #define FLOW_DEBUG(str, args...) DebugHelper::instance()->debugMsg(fmt::format(std::string("[{}|{}|{}] ")+str, __FILENAME__, __LINE__, __FUNCTION__, ##args))
-    #define FLOW_WARN(str, args...) DebugHelper::instance()->warnMsg(fmt::format(std::string("[{}|{}|{}] ")+str, __FILENAME__, __LINE__, __FUNCTION__, ##args))
+    //#define FLOW_WARN(str, args...) DebugHelper::instance()->warnMsg(fmt::format(std::string("[{}|{}|{}] ")+str, __FILENAME__, __LINE__, __FUNCTION__, ##args))
+    #define FLOW_WARN(str, args...) DebugHelper::instance()->warnMsg(fmt::format(str,##args))
     #define FLOW_ERROR(str, args...) DebugHelper::instance()->errorMsg(fmt::format(std::string("[{}|{}|{}] ")+str, __FILENAME__, __LINE__, __FUNCTION__, ##args))
 
 #endif

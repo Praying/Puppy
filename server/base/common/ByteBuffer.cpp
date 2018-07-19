@@ -131,7 +131,7 @@ namespace Flow
             ss << read<uint32_t>(i) << " - ";
         }
         ss << " ";
-        FLOW_INFO("[network] {}", ss.str().c_str());
+        //FLOW_INFO("[network] {}", ss.str().c_str());
     }
 
     void ByteBuffer::textLike() const
@@ -145,7 +145,7 @@ namespace Flow
             ss << buf;
         }
         ss << " ";
-        FLOW_INFO("[network] {}", ss.str().c_str());
+        //FLOW_INFO("[network] {}", ss.str().c_str());
 
     }
 
@@ -173,7 +173,7 @@ namespace Flow
             ss << buf;
         }
         ss << " ";
-        FLOW_INFO("[network], {}", ss.str().c_str());
+        //FLOW_INFO("[network], {}", ss.str().c_str());
 
     }
 }

@@ -36,13 +36,14 @@ namespace Flow
             return config_.get<T>(bpt::ptree::path_type(name, '/'));
         } catch (bpt::ptree_bad_path)
         {
-            FLOW_WARN("[server.loading]Missing name {} in config file {}, add \"{} = {}\" to this file", name.c_str(),
-                  filename_.c_str(), name.c_str(), std::to_string(def).c_str());
+//            FLOW_WARN("[server.loading]Missing name {} in config file {}, add \"{} = {}\" to this file", name.c_str(),
+//                  filename_.c_str(), name.c_str(), std::to_string(def).c_str());
 
         } catch (bpt::ptree_bad_data)
         {
-            FLOW_WARN("[server.loading]Bad value defined for name {} in config file {}, going to use {} instead",
+     /*       FLOW_WARN("[server.loading]Bad value defined for name {} in config file {}, going to use {} instead",
                   name.c_str(), filename_.c_str(), std::to_string(def).c_str());
+     */
         }
         return def;
     }
@@ -55,13 +56,13 @@ namespace Flow
             return config_.get<std::string>(bpt::ptree::path_type(name, '/'));
         } catch (bpt::ptree_bad_path)
         {
-            FLOW_WARN("[server.loading]Missing name {} in config file {}, add \"{} = {}\" to this file", name.c_str(),
+        /*    FLOW_WARN("[server.loading]Missing name {} in config file {}, add \"{} = {}\" to this file", name.c_str(),
                   filename_.c_str(), name.c_str(), def.c_str());
-        } catch (bpt::ptree_bad_data)
+        */} catch (bpt::ptree_bad_data)
         {
-            FLOW_WARN("[server.loading]Bad value defined for name {} in config file {}, going to use {} instead",
+          /*  FLOW_WARN("[server.loading]Bad value defined for name {} in config file {}, going to use {} instead",
                   name.c_str(), filename_.c_str(), def.c_str());
-        }
+       */ }
         return def;
     }
 

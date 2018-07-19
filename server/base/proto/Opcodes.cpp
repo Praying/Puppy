@@ -3,10 +3,10 @@
  * Copyright (c) 2018 Flow. All rights reserved.
  */
 
-#include <proto/Opcodes.hpp>
+#include <base/proto/Opcodes.hpp>
 #include <base/helper/DebugHelper.hpp>
-#include <proto/ProtosGen/Cmd.pb.h>
-#include <proto/ProtosGen/ClientCmd.pb.h>
+#include <base/proto/ProtosGen/Cmd.pb.h>
+#include <base/proto/ProtosGen/ClientCmd.pb.h>
 #include <base/network/Channel.hpp>
 
 
@@ -48,13 +48,13 @@ namespace Flow
     {
         if (internalTableClient_.find(opcode) != internalTableClient_.end())
         {
-            FLOW_ERROR("Tried to overried client handler of {} with {} (opcode {})", internalTableClient_[opcode]->name_,
-                       name, opcode);
+            //FLOW_ERROR("Tried to overried client handler of {} with {} (opcode {})", internalTableClient_[opcode]->name_,
+              //         name, opcode);
             return;
         }
         if (opcode == 0)
         {
-            FLOW_ERROR("Opcodes {} does not have a value", name);
+            //FLOW_ERROR("Opcodes {} does not have a value", name);
             return;
         }
 
@@ -64,13 +64,13 @@ namespace Flow
     {
         if (internalTableServer_.find(opcode) != internalTableServer_.end())
         {
-            FLOW_ERROR("Tried to overried client handler of {} with {} (opcode {})", internalTableServer_[opcode]->name_,
-                 name, opcode);
+            //FLOW_ERROR("Tried to overried client handler of {} with {} (opcode {})", internalTableServer_[opcode]->name_,
+            //     name, opcode);
             return;
         }
         if (opcode == 0)
         {
-            FLOW_ERROR("Opcodes {} does not have a value", name);
+            //FLOW_ERROR("Opcodes {} does not have a value", name);
             return;
         }
 

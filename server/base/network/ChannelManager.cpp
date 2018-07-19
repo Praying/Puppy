@@ -32,8 +32,8 @@ namespace Flow
 
         ChannelManager::~ChannelManager()
         {
-            FLOW_ASSERT(!threadPtrs_ && !clientAcceptorPtr_ && !serverAcceptorPtr_ && !threadCount_,
-                        "stopNetwork must be called prior to this destructor");
+            //FLOW_ASSERT(!threadPtrs_ && !clientAcceptorPtr_ && !serverAcceptorPtr_ && !threadCount_,
+            //            "stopNetwork must be called prior to this destructor");
         }
 
         bool
@@ -46,12 +46,12 @@ namespace Flow
             socketSystemSendBufferSize_ = sConfigManager->getIntDefault("Network.OutKBuff", -1);
             if (socketApplicationSendBufferSize_ <= 0)
             {
-                FLOW_ERROR("Network.OutUBuff is wrong in your config file");
+                //FLOW_ERROR("Network.OutUBuff is wrong in your config file");
                 return false;
             }
 
 
-            FLOW_ASSERT(threadCount > 0);
+            //FLOW_ASSERT(threadCount > 0);
             threadCount_ = threadCount;
             threadPtrs_ = createThreads();
             for (int i = 0; i < threadCount_; ++i)
@@ -67,14 +67,14 @@ namespace Flow
 
             } catch (asio::system_error &error)
             {
-                FLOW_ERROR("Exception got int startNetwork on address（{}:{}), error:{}", bindIP, clientPort,
-                           error.what());
+                //FLOW_ERROR("Exception got int startNetwork on address（{}:{}), error:{}", bindIP, clientPort,
+                //           error.what());
                 return false;
             }
 
             if (!acceptorPtr->bind())
             {
-                FLOW_ERROR("Bind client port failed, address: ({}:{})", bindIP, clientPort);
+                //FLOW_ERROR("Bind client port failed, address: ({}:{})", bindIP, clientPort);
                 return false;
             }
 
@@ -89,14 +89,14 @@ namespace Flow
 
             } catch (asio::system_error &error)
             {
-                FLOW_ERROR("Exception got int startNetwork on address（{}:{}), error:{}", bindIP, serverPort,
-                           error.what());
+                //FLOW_ERROR("Exception got int startNetwork on address（{}:{}), error:{}", bindIP, serverPort,
+                //           error.what());
                 return false;
             }
 
             if (!acceptorPtr->bind())
             {
-                FLOW_ERROR("Bind client port failed, address: ({}:{})", bindIP, serverPort);
+                //FLOW_ERROR("Bind client port failed, address: ({}:{})", bindIP, serverPort);
                 return false;
             }
 
@@ -144,9 +144,9 @@ namespace Flow
                 socket.set_option(asio::socket_base::send_buffer_size(socketSystemSendBufferSize_), err);
                 if (err)
                 {
-                    FLOW_ERROR(
-                            "ChannelManager::onClientSocketOpen sock.set_option(boost::asio::socket_base::send_buffer_size) err = {}",
-                            err.message().c_str());
+                    //FLOW_ERROR(
+                    //        "ChannelManager::onClientSocketOpen sock.set_option(boost::asio::socket_base::send_buffer_size) err = {}",
+                     //       err.message().c_str());
                     return;
                 }
             }
@@ -156,9 +156,9 @@ namespace Flow
                 socket.set_option(asio::ip::tcp::no_delay(true), err);
                 if (err)
                 {
-                    FLOW_ERROR(
-                            "ChannelManager::onClientSocketOpen sock.set_option(boost::asio::ip::tcp::no_delay) err = {}",
-                            err.message().c_str());
+                    //FLOW_ERROR(
+                     //       "ChannelManager::onClientSocketOpen sock.set_option(boost::asio::ip::tcp::no_delay) err = {}",
+                      //      err.message().c_str());
                     return;
                 }
             }
@@ -170,10 +170,10 @@ namespace Flow
                 threadPtrs_[threadIndex].addChannel(newChannel);
             } catch (std::bad_weak_ptr &e)
             {
-                FLOW_ERROR("Bad weak ptr: {}", e.what());
+                //FLOW_ERROR("Bad weak ptr: {}", e.what());
             } catch (asio::error_code &error)
             {
-                FLOW_ERROR("Failed to retrieve client's remote address, error:{}", error.message());
+                //FLOW_ERROR("Failed to retrieve client's remote address, error:{}", error.message());
             }
 
 
@@ -187,9 +187,9 @@ namespace Flow
                 socket.set_option(asio::socket_base::send_buffer_size(socketSystemSendBufferSize_), err);
                 if (err)
                 {
-                    FLOW_ERROR(
-                            "ChannelManager::onClientSocketOpen sock.set_option(boost::asio::socket_base::send_buffer_size) err = {}",
-                            err.message().c_str());
+                    //FLOW_ERROR(
+                        //    "ChannelManager::onClientSocketOpen sock.set_option(boost::asio::socket_base::send_buffer_size) err = {}",
+                         //   err.message().c_str());
                     return;
                 }
             }
@@ -199,9 +199,9 @@ namespace Flow
                 socket.set_option(asio::ip::tcp::no_delay(true), err);
                 if (err)
                 {
-                    FLOW_ERROR(
-                            "ChannelManager::onClientSocketOpen sock.set_option(boost::asio::ip::tcp::no_delay) err = {}",
-                            err.message().c_str());
+                    //FLOW_ERROR(
+                          //  "ChannelManager::onClientSocketOpen sock.set_option(boost::asio::ip::tcp::no_delay) err = {}",
+                           // err.message().c_str());
                     return;
                 }
             }
@@ -213,10 +213,10 @@ namespace Flow
                 threadPtrs_[threadIndex].addChannel(newChannel);
             } catch (std::bad_weak_ptr &e)
             {
-                FLOW_ERROR("Bad weak ptr: {}", e.what());
+                //FLOW_ERROR("Bad weak ptr: {}", e.what());
             } catch (asio::error_code &error)
             {
-                FLOW_ERROR("Failed to retrieve client's remote address, error:{}", error.message());
+                //FLOW_ERROR("Failed to retrieve client's remote address, error:{}", error.message());
             }
         }
 

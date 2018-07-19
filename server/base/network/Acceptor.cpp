@@ -22,23 +22,23 @@ namespace Flow
             acceptor_.open(endpoint_.protocol(), errorCode);
             if (errorCode)
             {
-                FLOW_ERROR("Failed to open acceptor, error:{}", errorCode.message());
+                //FLOW_ERROR("Failed to open acceptor, error:{}", errorCode.message());
                 return false;
             }
 
             acceptor_.bind(endpoint_, errorCode);
             if (errorCode)
             {
-                FLOW_ERROR("Failed to bind on {}:{}, error:{}", endpoint_.address().to_string(), endpoint_.port(),
-                           errorCode.message());
+                //FLOW_ERROR("Failed to bind on {}:{}, error:{}", endpoint_.address().to_string(), endpoint_.port(),
+                 //          errorCode.message());
                 return false;
             }
 
             acceptor_.listen(asio::socket_base::max_listen_connections, errorCode);
             if (errorCode)
             {
-                FLOW_ERROR("Failed to listen on {}:{}, error:{}", endpoint_.address().to_string(), endpoint_.port(),
-                           errorCode.message());
+                //FLOW_ERROR("Failed to listen on {}:{}, error:{}", endpoint_.address().to_string(), endpoint_.port(),
+                //           errorCode.message());
                 return false;
             }
 
@@ -55,7 +55,7 @@ namespace Flow
             acceptor_.close(errorCode);
             if (errorCode)
             {
-                FLOW_ERROR("Failed to close acceptor with error:{}", errorCode.message());
+                //FLOW_ERROR("Failed to close acceptor with error:{}", errorCode.message());
                 return;
             }
             return;
