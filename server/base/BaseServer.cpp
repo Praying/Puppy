@@ -10,6 +10,7 @@
 #include <base/common/Define.hpp>
 #include <google/protobuf/stubs/common.h>
 #include <base/config/ConfigManager.hpp>
+#include <glog/logging.h>
 
 namespace Flow {
 
@@ -64,6 +65,7 @@ namespace Flow {
     }
 
     bool BaseServer::initAction(int argc, char **argv) {
+        google::InitGoogleLogging(argv[0]);
         namespace fs = boost::filesystem;
         signal(SIGABRT, &AbortHandler);
         auto configFile = fs::absolute(getConfigFileName());
@@ -82,7 +84,7 @@ namespace Flow {
             return WinServiceRun() ? 0 : 0;
 #endif
         std::string configError;
-        if (sConfigManager->loadInitial(configFile.generic_string(),
+        if (!sConfigManager->loadInitial(configFile.generic_string(),
                                         std::vector<std::string>(argv, argv + argc),
                                         configError)) {
             std::cerr << "Error in config file: %s" << configError << "\n";
@@ -120,6 +122,7 @@ namespace Flow {
             return false;
         }
         if(!sChannelManager->startNetwork(*ioContext_,listener,clientPort, serverPort,numThreads)){
+            LOG(ERROR) << "Start network failed";
             return false;
         }
 
