@@ -128,6 +128,7 @@ namespace Flow {
 
 
         initOpCodeTable();
+        LOG(INFO)<<"Server start successfully!!!";
         return true;
     }
 
@@ -145,13 +146,13 @@ namespace Flow {
     }
 
     bool BaseServer::initNetwork() {
-        //     std::string ip = configVarMap_["BindAddress"].as<std::string>();
-        //     uint32_t port = configVarMap_["BindPort"].as<uint16_t >();
         return true;
     }
 
     void BaseServer::updateLoop() {
-
+        while(!stopEvent_){
+            //TODO
+        }
     }
 
     bool BaseServer::finishNetwork() {

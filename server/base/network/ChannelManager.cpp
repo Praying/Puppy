@@ -5,6 +5,7 @@
 #include <base/common/Errors.hpp>
 #include <base/helper/DebugHelper.hpp>
 #include <base/config/ConfigManager.hpp>
+#include <glog/logging.h>
 #include "ChannelManager.hpp"
 #include "ChannelThread.hpp"
 #include "Acceptor.hpp"
@@ -46,7 +47,7 @@ namespace Flow
             socketSystemSendBufferSize_ = sConfigManager->getIntDefault("Network.OutKBuff", -1);
             if (socketApplicationSendBufferSize_ <= 0)
             {
-                //FLOW_ERROR("Network.OutUBuff is wrong in your config file");
+                LOG(ERROR)<< "Network.OutUBuff is wrong in your config file";
                 return false;
             }
 
@@ -67,14 +68,14 @@ namespace Flow
 
             } catch (asio::system_error &error)
             {
-                //FLOW_ERROR("Exception got int startNetwork on address（{}:{}), error:{}", bindIP, clientPort,
-                //           error.what());
+
+                LOG(ERROR) << "Exception got int startNetwork on address: "<<bindIP<<":"<<clientPort<<"error:"<<error.what();
                 return false;
             }
 
             if (!acceptorPtr->bind())
             {
-                //FLOW_ERROR("Bind client port failed, address: ({}:{})", bindIP, clientPort);
+                LOG(ERROR) <<"Bind client port failed, address: "<<bindIP<<":"<<clientPort;
                 return false;
             }
 
@@ -89,14 +90,13 @@ namespace Flow
 
             } catch (asio::system_error &error)
             {
-                //FLOW_ERROR("Exception got int startNetwork on address（{}:{}), error:{}", bindIP, serverPort,
-                //           error.what());
+                LOG(ERROR) << "Exception got int startNetwork on address: "<<bindIP<<":"<<clientPort<<"error:"<<error.what();
                 return false;
             }
 
             if (!acceptorPtr->bind())
             {
-                //FLOW_ERROR("Bind client port failed, address: ({}:{})", bindIP, serverPort);
+                LOG(ERROR) <<"Bind client port failed, address: "<<bindIP<<":"<<clientPort;
                 return false;
             }
 

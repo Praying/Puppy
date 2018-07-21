@@ -2,6 +2,7 @@
 * Created by ABC on 2018/4/15.
 */
 
+#include <glog/logging.h>
 #include "Acceptor.hpp"
 #include "Channel.hpp"
 
@@ -31,6 +32,7 @@ namespace Flow
             {
                 //FLOW_ERROR("Failed to bind on {}:{}, error:{}", endpoint_.address().to_string(), endpoint_.port(),
                  //          errorCode.message());
+                LOG(ERROR) <<"Failed to bind on " << endpoint_.address().to_string() <<":"<<endpoint_.port() <<", error:" <<errorCode.message();
                 return false;
             }
 
