@@ -54,7 +54,7 @@ namespace Flow
             //FLOW_ASSERT(threadCount > 0);
             threadCount_ = threadCount;
             threadPtrs_ = createThreads();
-            for (int i = 0; i < threadCount_; ++i)
+            for (auto i = 0; i < threadCount_; ++i)
             {
                 threadPtrs_[i].start();
             }
@@ -113,7 +113,7 @@ namespace Flow
             serverAcceptorPtr_->close();
             if (threadCount_)
             {
-                for (int i = 0; i < threadCount_; ++i)
+                for (auto i = 0; i < threadCount_; ++i)
                     threadPtrs_[i].stop();
             }
 
@@ -131,7 +131,7 @@ namespace Flow
         {
             if (threadCount_)
             {
-                for (int i = 0; i < threadCount_; ++i)
+                for (auto i = 0; i < threadCount_; ++i)
                     threadPtrs_[i].wait();
             }
         }

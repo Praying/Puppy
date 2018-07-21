@@ -7,28 +7,21 @@
 
 #include <vector>
 #include <memory>
-#include <folly/Singleton.h>
-
+#include <base/common/Define.hpp>
 namespace Flow
 {
 
     class ConfigManager
     {
-        ConfigManager() = default;
 
-        ConfigManager(const ConfigManager &) = delete;
+        FLOW_SINGLETON_DECLARE(ConfigManager)
 
-        ConfigManager &operator=(const ConfigManager &) = delete;
-
-        ~ConfigManager() = default;
-
-        friend class folly::Singleton<ConfigManager>;
+        ConfigManager()= default;
 
     public:
         bool loadInitial(const std::string &file, std::vector<std::string> args, std::string &error);
         bool loadInitial(const std::string &file, std::string &error);
 
-        static std::shared_ptr<ConfigManager> instance();
 
         bool reload(std::string &error);
 

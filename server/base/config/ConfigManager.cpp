@@ -22,11 +22,9 @@ namespace Flow
         bpt::ptree config_;
         std::mutex configLock_;
     }
-    namespace
-    {
-        folly::Singleton<ConfigManager> instance_;
-    }
 
+
+    FLOW_SINGLETON_IMP(ConfigManager);
 
     template<typename T>
     T ConfigManager::getValueDefault(const std::string &name, T def) const
@@ -64,11 +62,6 @@ namespace Flow
                   name.c_str(), filename_.c_str(), def.c_str());
        */ }
         return def;
-    }
-
-    std::shared_ptr<ConfigManager> ConfigManager::instance()
-    {
-        return instance_.try_get();
     }
 
     bool ConfigManager::loadInitial(const std::string &file, std::vector<std::string> args, std::string &error)

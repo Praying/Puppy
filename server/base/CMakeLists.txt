@@ -8,4 +8,4 @@ else()
     set(LINUX_DEPS )
 endif()
 
-target_link_libraries(${APP_NAME} double-conversion Folly::folly Folly::folly_deps Folly::follybenchmark protobuf::libprotoc protobuf::libprotobuf protobuf::libprotobuf-lite ${LINUX_DEPS} ${Boost_LIBRARIES} )
+target_link_libraries(${APP_NAME} protobuf::libprotoc protobuf::libprotobuf protobuf::libprotobuf-lite ${LINUX_DEPS} ${Boost_LIBRARIES} )

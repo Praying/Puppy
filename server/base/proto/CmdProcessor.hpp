@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <folly/Singleton.h>
+
 #include <base/network/Packet.hpp>
 
 namespace Flow
@@ -13,10 +13,8 @@ namespace Flow
 
     class CmdProcessor
     {
-        friend class folly::Singleton<CmdProcessor>;
 
-    public:
-        static std::shared_ptr<CmdProcessor> instance();
+
 
     public:
         void handleLoginAuth(Packet &packet);

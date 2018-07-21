@@ -4,7 +4,6 @@
  */
 
 #pragma once
-#include <folly/Singleton.h>
 #include <base/common/Define.hpp>
 #include <base/common/Common.hpp>
 #include "spdlog/sinks/daily_file_sink.h"

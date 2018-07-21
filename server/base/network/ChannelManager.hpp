@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <folly/Singleton.h>
+
 #include <base/common/Define.hpp>
 #include <asio.hpp>
 

@@ -7,12 +7,6 @@
 
 namespace Flow
 {
-    static folly::Singleton<CmdProcessor> instance_;
-
-    std::shared_ptr<Flow::CmdProcessor> CmdProcessor::instance()
-    {
-        return instance_.try_get();
-    }
 
     void CmdProcessor::handleLoginAuth(Packet &packet)
     {
