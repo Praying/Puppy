@@ -61,7 +61,6 @@ namespace Flow {
     }
 
     BaseServer::BaseServer() {
-        //  initConfigOptions();
     }
 
     bool BaseServer::initAction(int argc, char **argv) {
@@ -71,8 +70,9 @@ namespace Flow {
         auto configFile = fs::absolute(getConfigFileName());
         std::string configService;
         auto vm = GetConsoleArguments(argc, argv, configFile, configService);
-        if (vm.count("help") || vm.count("version"))
+        if (vm.count("help") || vm.count("version")) {
             return false;
+        }
         GOOGLE_PROTOBUF_VERIFY_VERSION;
 
 #ifdef _WIN32
@@ -91,6 +91,8 @@ namespace Flow {
             return false;
         }
 
+        initOpCodeTable();
+
         ioContext_ = std::make_shared<asio::io_context>();
 
         asio::signal_set signals(*ioContext_, SIGINT, SIGTERM);
@@ -107,8 +109,9 @@ namespace Flow {
             }
             delete del;
         });
-        if (numThreads < 1)
+        if (numThreads < 1) {
             numThreads = 1;
+        }
         for (int i = 0; i < numThreads; ++i) {
             threadPool_->push_back(std::thread([this]() { this->ioContext_->run(); }));
         }
@@ -121,13 +124,14 @@ namespace Flow {
         if(networkThreads <= 0){
             return false;
         }
+
         if(!sChannelManager->startNetwork(*ioContext_,listener,clientPort, serverPort,numThreads)){
             LOG(ERROR) << "Start network failed";
             return false;
         }
 
 
-        initOpCodeTable();
+
         LOG(INFO)<<"Server start successfully!!!";
         return true;
     }
@@ -145,132 +149,6 @@ namespace Flow {
         return false;
     }
 
-    bool BaseServer::initNetwork() {
-        return true;
-    }
-
-    void BaseServer::updateLoop() {
-        while(!stopEvent_){
-            //TODO
-        }
-    }
-
-    bool BaseServer::finishNetwork() {
-        return false;
-    }
-
-    void BaseServer::initConfigOptions() {
-        configOptionsDesc_.add_options()
-                ("help", "Displays this help dialog.")
-                ("BindAddress", boost::program_options::value<std::string>()->default_value("127.0.0.1"),
-                 "Network listen address.")
-                ("BindPort", boost::program_options::value<uint16_t>()->default_value(10000),
-                 "Port the server listens for messages on.")
-                ("ServiceMessageHeap", boost::program_options::value<uint32_t>()->default_value(8192), "")
-                ("GlobalMessageHeap", boost::program_options::value<uint32_t>()->default_value(8192), "")
-                ("DBServer", boost::program_options::value<std::string>()->default_value("localhost"),
-                 "Address of the MySQL Server.")
-                ("DBPort", boost::program_options::value<uint16_t>()->default_value(3306), "Port of the MySQL Server.")
-                ("DBName", boost::program_options::value<std::string>()->default_value("swganh"),
-                 "Name of the MySQL database schema.")
-                ("DBUser", boost::program_options::value<std::string>()->default_value("root"),
-                 "Username of the database user account.")
-                ("DBPass", boost::program_options::value<std::string>()->default_value(""),
-                 "Password of the database user account.")
-                ("DBMinThreads", boost::program_options::value<uint32_t>()->default_value(4),
-                 "Minimum number of threads used for database work.")
-                ("DBMaxThreads", boost::program_options::value<uint32_t>()->default_value(16),
-                 "Maximum number of threads used for database work.")
-                ("ReliablePacketSizeServerToServer", boost::program_options::value<uint16_t>()->default_value(1400),
-                 "size of Packets for server server communication")
-                ("UnreliablePacketSizeServerToServer", boost::program_options::value<uint16_t>()->default_value(1400),
-                 "size of Packets for server server communication")
-                ("ReliablePacketSizeServerToClient", boost::program_options::value<uint16_t>()->default_value(496),
-                 "size of Packets for server client communication")
-                ("UnreliablePacketSizeServerToClient", boost::program_options::value<uint16_t>()->default_value(496),
-                 "size of Packets for server client communication")
-                ("ServerPacketWindowSize", boost::program_options::value<uint32_t>()->default_value(800), "")
-                ("ClientPacketWindowSize", boost::program_options::value<uint32_t>()->default_value(80), "")
-                ("UdpBufferSize", boost::program_options::value<uint32_t>()->default_value(4096), "Kernel UDP Buffer")
-                ("DBGlobalSchema", boost::program_options::value<std::string>()->default_value("swganh_static"), "")
-                ("DBGalaxySchema", boost::program_options::value<std::string>()->default_value("swganh"), "")
-                ("DBConfigSchema", boost::program_options::value<std::string>()->default_value("swganh_config"), "");
-
-    }
-
-    bool BaseServer::loadOptions(uint32_t argc, char **argv) {
-        namespace popt = boost::program_options;
-        popt::store(
-                popt::parse_command_line(argc, const_cast<const char *const *>(argv), configOptionsDesc_),
-                configVarMap_);
-        popt::notify(configVarMap_);
-        if (configVarMap_.count("help")) {
-            std::cout << configOptionsDesc_ << std::endl;
-            return false;
-        }
-        return true;
-    }
-
-    bool BaseServer::loadOptions(std::list<std::string> configFiles) {
-        // Iterate through the configuration files
-        // that are to be loaded. If a configuration file
-        // is missing, throw a runtime_error.
-        std::for_each(configFiles.begin(), configFiles.end(), [=](const std::string &filename) {
-            std::ifstream config_file(filename);
-            if (!config_file)
-                throw std::runtime_error("Could not open configuration file.");
-            else
-                boost::program_options::store(
-                        boost::program_options::parse_config_file(config_file, configOptionsDesc_, true),
-                        configVarMap_);
-        });
-
-        boost::program_options::notify(configVarMap_);
-
-        // The help argument has been flagged, display the
-        // server options and throw a runtime_error exception
-        // to stop server startup.
-        if (configVarMap_.count("help")) {
-            std::cout << configOptionsDesc_ << std::endl;
-            return false;
-        }
-        return true;
-    }
-
-    bool BaseServer::loadOptions(uint32_t argc, char **argv, std::list<std::string> configFiles) {
-        boost::program_options::store(
-                boost::program_options::parse_command_line(argc, const_cast<const char *const *>(argv),
-                                                           configOptionsDesc_), configVarMap_);
-
-        // Iterate through the configuration files
-        // that are to be loaded. If a configuration file
-        // is missing, throw a runtime_error.
-        std::for_each(configFiles.begin(), configFiles.end(), [=](const std::string &filename) {
-            std::ifstream configFile(filename);
-            if (!configFile)
-                throw std::runtime_error("Could not open configuration file.");
-            else
-                boost::program_options::store(
-                        boost::program_options::parse_config_file(configFile, configOptionsDesc_, true), configVarMap_);
-        });
-
-        boost::program_options::notify(configVarMap_);
-
-        // The help argument has been flagged, display the
-        // server options and throw a runtime_error exception
-        // to stop server startup.
-        if (configVarMap_.count("help")) {
-            std::cout << configOptionsDesc_ << std::endl;
-            return false;
-        }
-        return true;
-    }
-
-
-    void BaseServer::initConfig() {
-
-    }
-
 
     std::string BaseServer::getConfigFileName() {
         return std::__cxx11::string();
@@ -283,5 +161,9 @@ namespace Flow {
 
     void BaseServer::stopNow() {
         stopEvent_ = true;
+    }
+
+    void BaseServer::updateLoop() {
+
     }
 }

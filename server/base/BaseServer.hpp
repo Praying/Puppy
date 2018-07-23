@@ -15,12 +15,7 @@ namespace Flow{
     class BaseServer {
     public:
         BaseServer();
-
-        bool loadOptions(uint32_t argc, char** argv);
-        bool loadOptions(std::list<std::string> configFiles);
-        bool loadOptions(uint32_t argc, char **argv, std::list<std::string> configFiles);
     public:
-        virtual void initConfig();
         virtual bool initAction(int argc, char** argv);
         virtual void runAction();
         virtual void finishAction();
@@ -28,10 +23,7 @@ namespace Flow{
 
     protected:
         virtual bool initOpCodeTable();
-        virtual bool initNetwork();
         virtual void updateLoop();
-        virtual bool finishNetwork();
-        virtual void initConfigOptions();
         virtual std::string getConfigFileName();
 
         void signalHandler(const asio::error_code& error, int /*SignalNumber*/);
