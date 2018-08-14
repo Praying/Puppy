@@ -7,48 +7,32 @@
 
 #include <string>
 #include <vector>
-
+#include <asio.hpp>
 namespace Flow
 {
 
-    class ServerInfo
+    enum class ServerType{
+        ServerType_None,
+        ServerType_Route,
+        ServerType_Messager,
+    };
+
+    class ServerIndex
     {
+        std::string serverName_="";
+        ServerType  serverType_=ServerType::ServerType_None;
+
+        bool operator=(const ServerIndex& rhs){
+            return this->serverName_==rhs.serverName_&&
+                   this->serverType_==rhs.serverType_;
+        }
+    };
+
+    class ServerInfo{
     public:
-        /// Constructor
-        ServerInfo();
-
-        /// Returns the hostname of this machine
-        const std::string& serverName()const{return name_;}
-
-        /// Returns a textual desciption of this machine's CPU
-        const std::string& cpuInfo() const{return cpuInfo_;}
-
-        /// Returns a vector of CPU speeds for the CPU cores in this machine
-        const std::vector<float>& cpuSpeed() const {return cpuSpeeds_;}
-
-        /// Returns a textual description of this machine's RAM
-        const std::string& memInfo() const {return memInfo_;}
-
-        /// Returns the number of bytes of total RAM
-        const uint64_t memTotal() const {return memTotal_;}
-
-        /// Returns the number of bytes of process-used RAM
-        const uint64_t memUsed() const {return memUsed_;}
-
-        /// Request an update of the RAM statistics
-        void updateMem();
-    private:
-
-#if !defined(_WIN32)
-        void fetchLinuxCpuInfo();
-        void fetchLinuxMemInfo();
-#endif
-        std::string name_;
-        std::string cpuInfo_;
-        std::vector<float> cpuSpeeds_;
-        std::string memInfo_;
-        uint64_t memTotal_;
-        uint64_t memUsed_;
+        ServerIndex index_;
+        asio::ip::address innerAddr_;
+        asio::ip::address extAdder_;
     };
 
 }
