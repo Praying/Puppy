@@ -14,8 +14,9 @@ elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
     # Do something under 64 bits Windows NT platform
     prototargetdir=$protogendir/Win
 fi
+
 if [ ! -d "$prototargetdir" ]; then 
 	mkdir "$prototargetdir"
-fi 
+fi
 protoc -I=$protodir --cpp_out=$prototargetdir --python_out=$prototargetdir  $protodir/*.proto
 cp $prototargetdir/* $protogendir

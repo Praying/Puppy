@@ -11,6 +11,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem.hpp>
 #include <base/network/MessageBuffer.hpp>
+#include "CLock.hpp"
 
 namespace Flow
 {
@@ -79,5 +80,22 @@ namespace Flow
             uint32_t	m_item_cnt;
             char** 		m_item_list;
         };
+
+        class CRefObject
+        {
+        public:
+            CRefObject();
+            virtual ~CRefObject();
+
+            void SetLock(CLock* lock) { m_lock = lock; }
+            void AddRef();
+            void ReleaseRef();
+        private:
+            int				m_refCount;
+            CLock*	m_lock;
+        };
+
+        uint64_t get_tick_count();
+        void writePid();
     }
 }
