@@ -10,7 +10,7 @@
 #include <boost/filesystem.hpp>
 #include <asio/io_context.hpp>
 #include <thread>
-#include <base/common/ServerInfo.hpp>
+//#include <base/common/ServerInfo.hpp>
 
 namespace Flow{
     class BaseServer {
@@ -35,7 +35,7 @@ namespace Flow{
         std::shared_ptr<asio::io_context> ioContext_;
         std::shared_ptr<std::vector<std::thread>> threadPool_;
         std::atomic_bool stopEvent_ = false;
-        std::unordered_map<ServerIndex,ServerInfo> serverInfoMap_;
+        //std::unordered_map<ServerIndex,ServerInfo> serverInfoMap_;
     };
 }
 
