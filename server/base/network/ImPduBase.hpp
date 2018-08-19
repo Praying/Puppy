@@ -18,7 +18,7 @@ throw CPduException(m_pdu_header.service_id, m_pdu_header.command_id, ERROR_CODE
 #define CHECK_PB_PARSE_MSG(ret) { \
     if (ret == false) \
     {\
-        log("parse pb msg failed.");\
+        LOG(ERROR)<<"parse pb msg failed.";\
         return;\
     }\
 }

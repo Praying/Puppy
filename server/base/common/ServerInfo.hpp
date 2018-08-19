@@ -5,35 +5,72 @@
 
 #pragma once
 
-#include <string>
 #include <vector>
-#include <asio.hpp>
+#include <base/config/ConfigFileReader.hpp>
+#include <base/network/CImConn.hpp>
+#include <string>
+
 namespace Flow
 {
+#define MAX_RECONNECT_CNT	64
+#define MIN_RECONNECT_CNT	4
+    using Flow::Network::CImConn;
 
-    enum class ServerType{
-        ServerType_None,
-        ServerType_Route,
-        ServerType_Messager,
-    };
+    typedef struct {
+        std::string		server_ip;
+        uint16_t	server_port;
+        uint32_t	idle_cnt;
+        uint32_t	reconnect_cnt;
+        CImConn*	serv_conn;
+    } serv_info_t;
 
-    class ServerIndex
+    template <class T>
+    void serv_init(serv_info_t* server_list, uint32_t server_count)
     {
-        std::string serverName_="";
-        ServerType  serverType_=ServerType::ServerType_None;
-
-        bool operator=(const ServerIndex& rhs){
-            return this->serverName_==rhs.serverName_&&
-                   this->serverType_==rhs.serverType_;
+        for (uint32_t i = 0; i < server_count; i++) {
+            T* pConn = new T();
+            pConn->Connect(server_list[i].server_ip.c_str(), server_list[i].server_port, i);
+            server_list[i].serv_conn = pConn;
+            server_list[i].idle_cnt = 0;
+            server_list[i].reconnect_cnt = MIN_RECONNECT_CNT / 2;
         }
-    };
+    }
 
-    class ServerInfo{
-    public:
-        ServerIndex index_;
-        asio::ip::address innerAddr_;
-        asio::ip::address extAdder_;
-    };
+    template <class T>
+    void serv_check_reconnect(serv_info_t* server_list, uint32_t server_count)
+    {
+        T* pConn;
+        for (uint32_t i = 0; i < server_count; i++) {
+            pConn = (T*)server_list[i].serv_conn;
+            if (!pConn) {
+                server_list[i].idle_cnt++;
+                if (server_list[i].idle_cnt >= server_list[i].reconnect_cnt) {
+                    pConn = new T();
+                    pConn->Connect(server_list[i].server_ip.c_str(), server_list[i].server_port, i);
+                    server_list[i].serv_conn = pConn;
+                }
+            }
+        }
+    }
+
+    template <class T>
+    void serv_reset(serv_info_t* server_list, uint32_t server_count, uint32_t serv_idx)
+    {
+        if (serv_idx >= server_count) {
+            return;
+        }
+
+        server_list[serv_idx].serv_conn = NULL;
+        server_list[serv_idx].idle_cnt = 0;
+        server_list[serv_idx].reconnect_cnt *= 2;
+        if (server_list[serv_idx].reconnect_cnt > MAX_RECONNECT_CNT) {
+            server_list[serv_idx].reconnect_cnt = MIN_RECONNECT_CNT;
+        }
+    }
+
+    serv_info_t* read_server_config(ConfigFileReader* config_file, const char* server_ip_format,
+                                    const char* server_port_format, uint32_t& server_count);
+
 
 }
 

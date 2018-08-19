@@ -6,6 +6,7 @@
 #define SERVER_UTILPDU_HPP
 
 #include <string>
+#include <base/common/OSType.hpp>
 
 namespace Flow::Network {
 
