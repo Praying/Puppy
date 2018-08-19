@@ -5,6 +5,7 @@
 #include <cstring>
 #include <base/config/ConfigFileReader.hpp>
 #include <base/common/Util.hpp>
+#include <glog/logging.h>
 #include "CachePool.hpp"
 
 
@@ -49,11 +50,11 @@ namespace Flow {
         m_pContext = redisConnectWithTimeout(m_pCachePool->GetServerIP(), m_pCachePool->GetServerPort(), timeout);
         if (!m_pContext || m_pContext->err) {
             if (m_pContext) {
-                //log("redisConnect failed: %s", m_pContext->errstr);
+                LOG(ERROR)<<"redisConnect failed: " << m_pContext->errstr;
                 redisFree(m_pContext);
                 m_pContext = NULL;
             } else {
-                //log("redisConnect failed");
+                LOG(ERROR)<<"redisConnect failed";
             }
 
             return 1;
@@ -650,14 +651,14 @@ namespace Flow {
             char *str_cache_db = config_file.GetConfigName(db);
             char *str_max_conn_cnt = config_file.GetConfigName(maxconncnt);
             if (!cache_host || !str_cache_port || !str_cache_db || !str_max_conn_cnt) {
-                //log("not configure cache instance: %s", pool_name);
+                LOG(ERROR)<<"not configure cache instance: " << pool_name;
                 return 2;
             }
 
             CachePool *pCachePool = new CachePool(pool_name, cache_host, atoi(str_cache_port),
                                                   atoi(str_cache_db), atoi(str_max_conn_cnt));
             if (pCachePool->Init()) {
-                //log("Init cache pool failed");
+                LOG(ERROR)<<"Init cache pool failed";
                 return 3;
             }
 
