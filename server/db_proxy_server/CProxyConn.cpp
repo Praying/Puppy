@@ -3,10 +3,14 @@
 //
 
 #include <base/proto/ProtosGen/IM.BaseDefine.pb.h>
+#include <base/proto/ProtosGen/IM.Other.pb.h>
+#include <base/proto/ProtosGen/IM.Server.pb.h>
 #include <base/network/Netlib.hpp>
 #include <glog/logging.h>
+#include <base/common/CThreadPool.hpp>
 #include "CProxyConn.hpp"
 #include "CHandlerMap.hpp"
+#include "CSyncCenter.hpp"
 
 namespace Flow{
     static ConnMap_t g_proxy_conn_map;
@@ -238,7 +242,7 @@ namespace Flow{
                 if (pResp->pPdu) {
                     pConn->SendPdu(pResp->pPdu);
                 } else {
-                    LOG(ERROR)<<"close connection uuid=%d by parse pdu error\b", pResp->conn_uuid);
+                    LOG(ERROR)<<"close connection uuid="<<pResp->conn_uuid<< "by parse pdu error";
                     pConn->Close();
                 }
             }

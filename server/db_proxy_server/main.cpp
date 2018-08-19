@@ -1,12 +1,25 @@
 #include <iostream>
 #include "CachePool.hpp"
 #include "DBPool.hpp"
+#include "CProxyConn.hpp"
 #include <signal.h>
 #include <cstring>
 #include <glog/logging.h>
 #include <base/config/ConfigFileReader.hpp>
 #include <base/network/Netlib.hpp>
 #include <base/common/Util.hpp>
+#include <db_proxy_server/business/CUserModel.hpp>
+#include <db_proxy_server/business/CRelationModel.hpp>
+#include <db_proxy_server/business/MessageModel.hpp>
+#include <db_proxy_server/business/CGroupMessageModel.hpp>
+#include <db_proxy_server/business/CAudioModel.hpp>
+#include <db_proxy_server/business/CGroupModel.hpp>
+#include <db_proxy_server/business/CSessionModel.hpp>
+#include <db_proxy_server/business/CFileModel.hpp>
+
+namespace Flow{
+    std::string strAudioEnc;
+}
 
 using namespace Flow;
 
@@ -53,6 +66,40 @@ int main(int argc, char **argv) {
     }
     std::cout << "db init success" << std::endl;
     // 3. 启动任务队列，用于处理任务
+
+    // 主线程初始化单例，不然在工作线程可能会出现多次初始化
+    if (!CAudioModel::getInstance()) {
+        return -1;
+    }
+
+    if (!CGroupMessageModel::getInstance()) {
+        return -1;
+    }
+
+    if (!CGroupModel::getInstance()) {
+        return -1;
+    }
+
+    if (!CMessageModel::getInstance()) {
+        return -1;
+    }
+
+    if (!CSessionModel::getInstance()) {
+        return -1;
+    }
+
+    if(!CRelationModel::getInstance())
+    {
+        return -1;
+    }
+
+    if (!CUserModel::getInstance()) {
+        return -1;
+    }
+
+    if (!CFileModel::getInstance()) {
+        return -1;
+    }
 
     ConfigFileReader config_file("dbproxyserver.conf");
 

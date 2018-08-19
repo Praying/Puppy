@@ -7,6 +7,7 @@
 #include <Base/common/CLock.hpp>
 #include <base/network/Packet.hpp>
 #include <chrono>
+#include <sstream>
 
 namespace Flow
 {
@@ -133,6 +134,46 @@ namespace Flow
             snprintf(szPid, sizeof(szPid), "%d", curPid);
             fwrite(szPid, strlen(szPid), 1, f);
             fclose(f);
+        }
+        std::string int2string(uint32_t user_id)
+        {
+            std::stringstream ss;
+            ss << user_id;
+            return ss.str();
+        }
+
+        uint32_t string2int(const std::string& value)
+        {
+            return (uint32_t)atoi(value.c_str());
+        }
+
+        // 由于被替换的内容可能包含?号，所以需要更新开始搜寻的位置信息来避免替换刚刚插入的?号
+        void replace_mark(std::string& str, std::string& new_value, uint32_t& begin_pos)
+        {
+            std::string::size_type pos = str.find('?', begin_pos);
+            if (pos == std::string::npos) {
+                return;
+            }
+
+            std::string prime_new_value = "'"+ new_value + "'";
+            str.replace(pos, 1, prime_new_value);
+
+            begin_pos = pos + prime_new_value.size();
+        }
+
+        void replace_mark(std::string& str, uint32_t new_value, uint32_t& begin_pos)
+        {
+            std::stringstream ss;
+            ss << new_value;
+
+            std::string str_value = ss.str();
+            std::string::size_type pos = str.find('?', begin_pos);
+            if (pos == std::string::npos) {
+                return;
+            }
+
+            str.replace(pos, 1, str_value);
+            begin_pos = pos + str_value.size();
         }
 
 
