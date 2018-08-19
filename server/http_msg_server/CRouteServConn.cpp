@@ -9,25 +9,24 @@
 #include <base/proto/ProtosGen/IM.Server.pb.h>
 #include "CRouteServConn.hpp"
 
-namespace Flow{
+namespace Flow {
     static ConnMap_t g_route_server_conn_map;
 
-    static serv_info_t* g_route_server_list;
+    static serv_info_t *g_route_server_list;
     static uint32_t g_route_server_count;
-    static CRouteServConn* g_master_rs_conn = NULL;
+    static CRouteServConn *g_master_rs_conn = NULL;
 
 
-    void route_server_conn_timer_callback(void* callback_data, uint8_t msg, uint32_t handle, void* pParam)
-    {
+    void route_server_conn_timer_callback(void *callback_data, uint8_t msg, uint32_t handle, void *pParam) {
         ConnMap_t::iterator it_old;
-        CRouteServConn* pConn = NULL;
+        CRouteServConn *pConn = NULL;
         uint64_t cur_time = get_tick_count();
 
-        for (ConnMap_t::iterator it = g_route_server_conn_map.begin(); it != g_route_server_conn_map.end(); ) {
+        for (ConnMap_t::iterator it = g_route_server_conn_map.begin(); it != g_route_server_conn_map.end();) {
             it_old = it;
             it++;
 
-            pConn = (CRouteServConn*)it_old->second;
+            pConn = (CRouteServConn *) it_old->second;
             pConn->OnTimer(cur_time);
         }
 
@@ -35,8 +34,7 @@ namespace Flow{
         serv_check_reconnect<CRouteServConn>(g_route_server_list, g_route_server_count);
     }
 
-    void init_route_serv_conn(serv_info_t* server_list, uint32_t server_count)
-    {
+    void init_route_serv_conn(serv_info_t *server_list, uint32_t server_count) {
         g_route_server_list = server_list;
         g_route_server_count = server_count;
 
@@ -45,12 +43,11 @@ namespace Flow{
         netlib_register_timer(route_server_conn_timer_callback, NULL, 1000);
     }
 
-    bool is_route_server_available()
-    {
-        CRouteServConn* pConn = NULL;
+    bool is_route_server_available() {
+        CRouteServConn *pConn = NULL;
 
         for (uint32_t i = 0; i < g_route_server_count; i++) {
-            pConn = (CRouteServConn*)g_route_server_list[i].serv_conn;
+            pConn = (CRouteServConn *) g_route_server_list[i].serv_conn;
             if (pConn && pConn->IsOpen()) {
                 return true;
             }
@@ -59,12 +56,11 @@ namespace Flow{
         return false;
     }
 
-    void send_to_all_route_server(CImPdu* pPdu)
-    {
-        CRouteServConn* pConn = NULL;
+    void send_to_all_route_server(CImPdu *pPdu) {
+        CRouteServConn *pConn = NULL;
 
         for (uint32_t i = 0; i < g_route_server_count; i++) {
-            pConn = (CRouteServConn*)g_route_server_list[i].serv_conn;
+            pConn = (CRouteServConn *) g_route_server_list[i].serv_conn;
             if (pConn && pConn->IsOpen()) {
                 pConn->SendPdu(pPdu);
             }
@@ -72,27 +68,25 @@ namespace Flow{
     }
 
 // get the oldest route server connection
-    CRouteServConn* get_route_serv_conn()
-    {
+    CRouteServConn *get_route_serv_conn() {
         return g_master_rs_conn;
     }
 
-    void update_master_route_serv_conn()
-    {
-        uint64_t oldest_connect_time = (uint64_t)-1;
-        CRouteServConn* pOldestConn = NULL;
+    void update_master_route_serv_conn() {
+        uint64_t oldest_connect_time = (uint64_t) -1;
+        CRouteServConn *pOldestConn = NULL;
 
-        CRouteServConn* pConn = NULL;
+        CRouteServConn *pConn = NULL;
 
         for (uint32_t i = 0; i < g_route_server_count; i++) {
-            pConn = (CRouteServConn*)g_route_server_list[i].serv_conn;
-            if (pConn && pConn->IsOpen() && (pConn->GetConnectTime() < oldest_connect_time) ){
+            pConn = (CRouteServConn *) g_route_server_list[i].serv_conn;
+            if (pConn && pConn->IsOpen() && (pConn->GetConnectTime() < oldest_connect_time)) {
                 pOldestConn = pConn;
                 oldest_connect_time = pConn->GetConnectTime();
             }
         }
 
-        g_master_rs_conn =  pOldestConn;
+        g_master_rs_conn = pOldestConn;
 
         if (g_master_rs_conn) {
             IM::Server::IMRoleSet msg;
@@ -106,31 +100,27 @@ namespace Flow{
     }
 
 
-    CRouteServConn::CRouteServConn()
-    {
+    CRouteServConn::CRouteServConn() {
         m_bOpen = false;
         m_serv_idx = 0;
     }
 
-    CRouteServConn::~CRouteServConn()
-    {
+    CRouteServConn::~CRouteServConn() {
 
     }
 
-    void CRouteServConn::Connect(const char* server_ip, uint16_t server_port, uint32_t idx)
-    {
-        LOG(INFO) << "Connecting to RouteServer"<< server_ip <<":"<<server_port;
+    void CRouteServConn::Connect(const char *server_ip, uint16_t server_port, uint32_t idx) {
+        LOG(INFO) << "Connecting to RouteServer" << server_ip << ":" << server_port;
 
         m_serv_idx = idx;
-        m_handle = netlib_connect(server_ip, server_port, imconn_callback, (void*)&g_route_server_conn_map);
+        m_handle = netlib_connect(server_ip, server_port, imconn_callback, (void *) &g_route_server_conn_map);
 
         if (m_handle != NETLIB_INVALID_HANDLE) {
             g_route_server_conn_map.insert(std::make_pair(m_handle, this));
         }
     }
 
-    void CRouteServConn::Close()
-    {
+    void CRouteServConn::Close() {
         serv_reset<CRouteServConn>(g_route_server_list, g_route_server_count, m_serv_idx);
 
         m_bOpen = false;
@@ -146,9 +136,8 @@ namespace Flow{
         }
     }
 
-    void CRouteServConn::OnConfirm()
-    {
-        LOG(ERROR)<<"connect to route server success ";
+    void CRouteServConn::OnConfirm() {
+        LOG(ERROR) << "connect to route server success ";
         m_bOpen = true;
         m_connect_time = get_tick_count();
         g_route_server_list[m_serv_idx].reconnect_cnt = MIN_RECONNECT_CNT / 2;
@@ -159,14 +148,12 @@ namespace Flow{
 
     }
 
-    void CRouteServConn::OnClose()
-    {
-        LOG(ERROR)<<"onclose from route server handle= " << m_handle;
+    void CRouteServConn::OnClose() {
+        LOG(ERROR) << "onclose from route server handle= " << m_handle;
         Close();
     }
 
-    void CRouteServConn::OnTimer(uint64_t curr_tick)
-    {
+    void CRouteServConn::OnTimer(uint64_t curr_tick) {
         if (curr_tick > m_last_send_tick + SERVER_HEARTBEAT_INTERVAL) {
             IM::Other::IMHeartBeat msg;
             CImPdu pdu;
@@ -177,13 +164,12 @@ namespace Flow{
         }
 
         if (curr_tick > m_last_recv_tick + SERVER_TIMEOUT) {
-            LOG(ERROR)<<"conn to route server timeout ";
+            LOG(ERROR) << "conn to route server timeout ";
             Close();
         }
     }
 
-    void CRouteServConn::HandlePdu(CImPdu* pPdu)
-    {
+    void CRouteServConn::HandlePdu(CImPdu *pPdu) {
     }
 
 };
