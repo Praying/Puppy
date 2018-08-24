@@ -5,6 +5,7 @@
 #include <cstring>
 #include <cassert>
 #include "CPushApp.hpp"
+#include "PushDefine.hpp"
 
 using namespace Flow::PushServer;
 
@@ -26,6 +27,7 @@ void writePid()
 
 
 int main(int argc, const char * argv[]) {
+    google::InitGoogleLogging(argv[0]);
     // insert code here...
     printf("start push server...\n");
     signal(SIGPIPE, SIG_IGN);
