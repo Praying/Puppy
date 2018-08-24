@@ -9,8 +9,9 @@
 #include "CDBServConn.hpp"
 #include "CRouteServConn.hpp"
 
+
 #define DEFAULT_CONCURRENT_DB_CONN_CNT  2
-#define VERSION "0.0.1"
+
 
 using namespace Flow;
 

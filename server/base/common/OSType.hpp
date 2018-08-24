@@ -90,4 +90,6 @@ typedef void (*callback_t)(void *callback_data, uint8_t msg, uint32_t handle, vo
 const uint32_t INVALID_UINT32  = (uint32_t) -1;
 const uint32_t INVALID_VALUE = 0;
 
+#define VERSION "0.0.1"
+
 #endif //SERVER_OSTYPE_HPP

@@ -16,14 +16,13 @@
 #include <db_proxy_server/business/CGroupModel.hpp>
 #include <db_proxy_server/business/CSessionModel.hpp>
 #include <db_proxy_server/business/CFileModel.hpp>
-
+#include <base/common/OSType.hpp>
 namespace Flow{
     std::string strAudioEnc;
 }
 
 using namespace Flow;
 
-#define VERSION "0.0.1"
 
 // this callback will be replaced by imconn_callback() in OnConnect()
 void proxy_serv_callback(void* callback_data, uint8_t msg, uint32_t handle, void* pParam)
