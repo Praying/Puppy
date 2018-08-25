@@ -10,7 +10,7 @@
 #include <base/common/ServerInfo.hpp>
 namespace Flow{
     using Flow::Network::CImPdu;
-    using Flow::Network::CImConn;
+    using Flow::CImConn;
 
     class CDBServConn : public CImConn
     {

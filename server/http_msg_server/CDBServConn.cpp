@@ -27,8 +27,8 @@
 namespace Flow{
     using namespace IM::BaseDefine;
     using namespace Flow::Network;
-    using Flow::Network::CImConn;
-    using Flow::Network::ConnMap_t;
+    using Flow::CImConn;
+    using Flow::ConnMap_t;
     using namespace Util;
 
     extern std::unordered_map<std::string, auth_struct*> g_hm_http_auth;

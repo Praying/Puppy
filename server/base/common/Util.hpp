@@ -107,5 +107,7 @@ namespace Flow {
         extern  void replace_mark(std::string &str, uint32_t new_value, uint32_t &begin_pos);
 
         extern  void replace_mark(std::string &str, std::string &new_value, uint32_t &begin_pos);
+
+        const char*  memfind(const char *src_str,size_t src_len, const char *sub_str, size_t sub_len, bool flag=true);
     }
 }
