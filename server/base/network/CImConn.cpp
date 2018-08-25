@@ -5,9 +5,11 @@
 #include <glog/logging.h>
 #include "CImConn.hpp"
 #include "Netlib.hpp"
+#include "ImPduBase.hpp"
 #include <base/common/OSType.hpp>
 
-namespace Flow::Network{
+namespace Flow{
+    using namespace Network;
     //static uint64_t g_send_pkt_cnt = 0;		// 发送数据包总数
 //static uint64_t g_recv_pkt_cnt = 0;		// 接收数据包总数
 
@@ -139,10 +141,10 @@ namespace Flow::Network{
             m_last_recv_tick = get_tick_count();
         }
 
-        CImPdu* pPdu = NULL;
+        Network::CImPdu* pPdu = NULL;
         try
         {
-            while ( ( pPdu = CImPdu::ReadPdu(m_in_buf.GetBuffer(), m_in_buf.GetWriteOffset()) ) )
+            while ( ( pPdu = Network::CImPdu::ReadPdu(m_in_buf.GetBuffer(), m_in_buf.GetWriteOffset()) ) )
             {
                 uint32_t pdu_len = pPdu->GetLength();
 

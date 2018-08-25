@@ -17,8 +17,9 @@
 #define READ_BUF_SIZE    2048
 
 
-namespace Flow::Network {
+namespace Flow {
     using namespace Util;
+    //using namespace Network;
     class CImConn : public CRefObject {
     public:
         CImConn();
@@ -27,7 +28,7 @@ namespace Flow::Network {
 
         bool IsBusy() { return m_busy; }
 
-        int SendPdu(CImPdu *pPdu) { return Send(pPdu->GetBuffer(), pPdu->GetLength()); }
+        int SendPdu(Network::CImPdu *pPdu) { return Send(pPdu->GetBuffer(), pPdu->GetLength()); }
 
         int Send(void *data, int len);
 
@@ -45,7 +46,7 @@ namespace Flow::Network {
 
         virtual void OnWriteCompelete() {};
 
-        virtual void HandlePdu(CImPdu *pPdu) {}
+        virtual void HandlePdu(Network::CImPdu *pPdu) {}
 
     protected:
         net_handle_t m_handle;
@@ -53,8 +54,8 @@ namespace Flow::Network {
 
         std::string m_peer_ip;
         uint16_t m_peer_port;
-        CSimpleBuffer m_in_buf;
-        CSimpleBuffer m_out_buf;
+        Network::CSimpleBuffer m_in_buf;
+        Network::CSimpleBuffer m_out_buf;
 
         bool m_policy_conn;
         uint32_t m_recv_bytes;
@@ -63,8 +64,8 @@ namespace Flow::Network {
         uint64_t m_last_all_user_tick;
     };
 
-    typedef std::unordered_map<net_handle_t, CImConn *> ConnMap_t;
-    typedef std::unordered_map<uint32_t, CImConn *> UserMap_t;
+    typedef std::unordered_map<net_handle_t, Flow::CImConn*> ConnMap_t;
+    typedef std::unordered_map<uint32_t, Flow::CImConn *> UserMap_t;
 
     void imconn_callback(void *callback_data, uint8_t msg, uint32_t handle, void *pParam);
 

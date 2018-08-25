@@ -11,4 +11,4 @@ else()
     set(LINUX_DEPS )
 endif()
 
-target_link_libraries(${APP_NAME} protobuf::libprotoc protobuf::libprotobuf protobuf::libprotobuf-lite ${LINUX_DEPS} ${Boost_LIBRARIES} glog::glog  ${CURL_LIBRARIES} z  jsoncpp_lib_static OpenSSL::SSL OpenSSL::Crypto )
+target_link_libraries(${APP_NAME} protobuf::libprotoc protobuf::libprotobuf protobuf::libprotobuf-lite ${LINUX_DEPS} ${Boost_LIBRARIES} glog::glog  ${CURL_LIBRARIES} z  jsoncpp_lib_static OpenSSL::SSL OpenSSL::Crypto uuid)

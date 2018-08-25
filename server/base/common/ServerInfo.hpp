@@ -14,7 +14,7 @@ namespace Flow
 {
 #define MAX_RECONNECT_CNT	64
 #define MIN_RECONNECT_CNT	4
-    using Flow::Network::CImConn;
+    using Flow::CImConn;
 
     typedef struct {
         std::string		server_ip;

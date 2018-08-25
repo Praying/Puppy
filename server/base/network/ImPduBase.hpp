@@ -5,6 +5,7 @@
 #ifndef SERVER_IMPDUBASE_HPP
 #define SERVER_IMPDUBASE_HPP
 
+//#include <glog/logging.h>
 #include <base/common/OSType.hpp>
 #include <google/protobuf/message_lite.h>
 #include "UtilPdu.hpp"

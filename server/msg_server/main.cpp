@@ -42,6 +42,7 @@ int main(int argc, char *argv[]) {
         printf("Server Build: %s %s\n", __DATE__, __TIME__);
         return 0;
     }
+    google::InitGoogleLogging(argv[0]);
 
     signal(SIGPIPE, SIG_IGN);
     srand(time(NULL));
