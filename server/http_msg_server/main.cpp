@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 
     signal(SIGPIPE, SIG_IGN);
     srand(time(NULL));
-
+    google::InitGoogleLogging(argv[0]);
     LOG(ERROR)<<"MsgServer max files can open:  " <<getdtablesize();
     ConfigFileReader config_file("httpmsgserver.conf");
 

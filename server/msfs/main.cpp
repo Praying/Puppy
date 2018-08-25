@@ -128,7 +128,8 @@ int main(int argc, char* argv[])
             break;
         }
     }
-    RAW_LOG(ERROR,"MsgServer max files can open: %d", getdtablesize());
+    google::InitGoogleLogging(argv[0]);
+    RAW_LOG(INFO,"MsgServer max files can open: %d", getdtablesize());
 
 
     char* listen_ip = config_file.GetConfigName("ListenIP");
@@ -145,7 +146,7 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    RAW_LOG(ERROR,"%s,%s",listen_ip, str_listen_port);
+    RAW_LOG(INFO,"%s,%s",listen_ip, str_listen_port);
     uint16_t listen_port = atoi(str_listen_port);
     long long int  fileCnt = atoll(str_file_cnt);
     int filesPerDir = atoi(str_files_per_dir);

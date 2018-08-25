@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
     }
 
     signal(SIGPIPE, SIG_IGN);
-
+    google::InitGoogleLogging(argv[0]);
     ConfigFileReader config_file("loginserver.conf");
 
     char *client_listen_ip = config_file.GetConfigName("ClientListenIP");
