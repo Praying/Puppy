@@ -18,11 +18,10 @@ using namespace Flow;
 
 #define DEFAULT_CONCURRENT_DB_CONN_CNT  10
 
-namespace Flow::MsgServer{
+namespace Flow::MsgServer {
     CAes *pAes;
 
 }
-
 
 
 // for client connect in
@@ -31,7 +30,7 @@ void msg_serv_callback(void *callback_data, uint8_t msg, uint32_t handle, void *
         CMsgConn *pConn = new CMsgConn();
         pConn->OnConnect(handle);
     } else {
-        LOG(ERROR)<<"!!!error msg: "<< msg;
+        LOG(ERROR) << "!!!error msg: " << msg;
     }
 }
 
@@ -46,7 +45,7 @@ int main(int argc, char *argv[]) {
     signal(SIGPIPE, SIG_IGN);
     srand(time(NULL));
 
-    LOG(ERROR)<<"MsgServer max files can open:  " << getdtablesize();
+    LOG(ERROR) << "MsgServer max files can open:  " << getdtablesize();
 
     Flow::ConfigFileReader config_file("msgserver.conf");
 
@@ -76,7 +75,7 @@ int main(int argc, char *argv[]) {
                                                        "FileServerPort", file_server_count);
 
     if (!str_aes_key || strlen(str_aes_key) != 32) {
-        LOG(ERROR)<<"aes key is invalied";
+        LOG(ERROR) << "aes key is invalied";
         return -1;
     }
 
@@ -106,7 +105,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (!listen_ip || !str_listen_port || !ip_addr1) {
-        LOG(ERROR)<<"config file miss, exit... ";
+        LOG(ERROR) << "config file miss, exit... ";
         return -1;
     }
 

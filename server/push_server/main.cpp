@@ -31,8 +31,15 @@ int main(int argc, const char * argv[]) {
     // insert code here...
     printf("start push server...\n");
     signal(SIGPIPE, SIG_IGN);
-    CPushApp::GetInstance()->Init();
-    CPushApp::GetInstance()->Start();
+    if(!CPushApp::GetInstance()->Init()){
+        LOG(ERROR)<<"PushServer init failed!!!";
+        return 1;
+    }
+
+    if (!CPushApp::GetInstance()->Start()){
+        LOG(ERROR)<<"PushServer start failed!!!";
+        return 1;
+    }
     writePid();
     while (true) {
         S_Sleep(1000);
