@@ -38,7 +38,6 @@ void msg_serv_callback(void *callback_data, uint8_t msg, uint32_t handle, void *
 
 int main(int argc, char *argv[]) {
     if ((argc == 2) && (strcmp(argv[1], "-v") == 0)) {
-//		printf("Server Version: MsgServer/%s\n", VERSION);
         printf("Server Build: %s %s\n", __DATE__, __TIME__);
         return 0;
     }
@@ -88,7 +87,7 @@ int main(int argc, char *argv[]) {
     // 建议配置4个实例，这样更新BusinessServer时，不会影响业务
     if (db_server_count < 2) {
         LOG(ERROR)<<"DBServerIP need 2 instance at lest ";
-        return 1;
+        //return 1;
     }
 
     // 到BusinessServer的开多个并发的连接
