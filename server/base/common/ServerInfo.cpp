@@ -16,7 +16,7 @@ namespace Flow{
             sprintf(server_port_key, "%s%d", server_port_format, server_count + 1);
             char* server_ip_value = config_file->GetConfigName(server_ip_key);
             char* server_port_value = config_file->GetConfigName(server_port_key);
-            if (!server_ip_value || !server_port_value) {
+            if (server_ip_value==NULL || server_port_value==NULL) {
                 break;
             }
 
