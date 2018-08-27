@@ -5,3 +5,4 @@ pkill -9 db_proxy_server
 pkill -9 msfs
 pkill -9 login_server
 pkill -9 file_server
+pkill -9 push_server
