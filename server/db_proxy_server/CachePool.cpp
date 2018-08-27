@@ -669,7 +669,7 @@ namespace Flow {
     }
 
     CacheConn *CacheManager::GetCacheConn(const char *pool_name) {
-        std::map<std::string, CachePool *>::iterator it = m_cache_pool_map.find(pool_name);
+        auto it = m_cache_pool_map.find(pool_name);
         if (it != m_cache_pool_map.end()) {
             return it->second->GetCacheConn();
         } else {
@@ -682,7 +682,7 @@ namespace Flow {
             return;
         }
 
-        std::map<std::string, CachePool *>::iterator it = m_cache_pool_map.find(pCacheConn->GetPoolName());
+        auto it = m_cache_pool_map.find(pCacheConn->GetPoolName());
         if (it != m_cache_pool_map.end()) {
             return it->second->RelCacheConn(pCacheConn);
         }
