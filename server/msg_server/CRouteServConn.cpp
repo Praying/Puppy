@@ -140,7 +140,7 @@ namespace Flow::MsgServer {
 
     void CRouteServConn::Connect(const char* server_ip, uint16_t server_port, uint32_t idx)
     {
-        RAW_LOG(ERROR,"Connecting to RouteServer %s:%d ", server_ip, server_port);
+        LOG(INFO)<<"Connecting to RouteServer "<<server_ip<<":"<<server_port;
 
         m_serv_idx = idx;
         m_handle = netlib_connect(server_ip, server_port, imconn_callback, (void*)&g_route_server_conn_map);
@@ -169,7 +169,7 @@ namespace Flow::MsgServer {
 
     void CRouteServConn::OnConfirm()
     {
-        RAW_LOG(ERROR,"connect to route server success ");
+        LOG(INFO)<<"connect to route server success ";
         m_bOpen = true;
         m_connect_time = get_tick_count();
         g_route_server_list[m_serv_idx].reconnect_cnt = MIN_RECONNECT_CNT / 2;
@@ -198,7 +198,7 @@ namespace Flow::MsgServer {
 
     void CRouteServConn::OnClose()
     {
-        LOG(ERROR)<<("onclose from route server handle=%d ", m_handle);
+        LOG(ERROR)<<"onclose from route server handle= "<< m_handle;
         Close();
     }
 
@@ -214,7 +214,7 @@ namespace Flow::MsgServer {
         }
 
         if (curr_tick > m_last_recv_tick + SERVER_TIMEOUT) {
-            RAW_LOG(ERROR,"conn to route server timeout ");
+            LOG(ERROR)<<"conn to route server timeout ";
             Close();
         }
     }
@@ -258,7 +258,7 @@ namespace Flow::MsgServer {
                 break;
                 break;
             default:
-                RAW_LOG(ERROR,"unknown cmd id=%d ", pPdu->GetCommandId());
+                LOG(ERROR)<<"unknown cmd id="<< pPdu->GetCommandId();
                 break;
         }
     }
@@ -271,7 +271,7 @@ namespace Flow::MsgServer {
         uint32_t user_id = msg.user_id();
         uint32_t client_type = msg.client_type();
         uint32_t reason = msg.reason();
-        RAW_LOG(ERROR,"HandleKickUser, user_id=%u, client_type=%u, reason=%u. ", user_id, client_type, reason);
+        LOG(INFO)<<"HandleKickUser, user_id="<<user_id<<", client_type="<<client_type<<", reason=%u"<< reason;
 
         CImUser* pUser = CImUserManager::GetInstance()->GetImUserById(user_id);
         if (pUser) {
@@ -287,7 +287,7 @@ namespace Flow::MsgServer {
 
         IM::BaseDefine::UserStat user_stat = msg.user_stat();
 
-        RAW_LOG(ERROR,"HandleFriendStatusNotify, user_id=%u, status=%u ", user_stat.user_id(), user_stat.status());
+        LOG(INFO)<<"HandleFriendStatusNotify, user_id="<<user_stat.user_id()<<", status="<< user_stat.status();
 
         // send friend online message to client
         CImUserManager::GetInstance()->BroadcastPdu(pPdu, CLIENT_TYPE_FLAG_PC);
@@ -304,8 +304,7 @@ namespace Flow::MsgServer {
         uint32_t from_user_id = msg.from_user_id();
         uint32_t to_user_id = msg.to_session_id();
         uint32_t msg_id = msg.msg_id();
-        RAW_LOG(ERROR,"HandleMsgData, %u->%u, msg_id=%u. ", from_user_id, to_user_id, msg_id);
-
+        LOG(INFO)<<"HandleMsgData, "<<from_user_id<<"->"<<to_user_id<<"%u, msg_id="<<msg_id;
 
         CImUser* pFromImUser = CImUserManager::GetInstance()->GetImUserById(from_user_id);
         if (pFromImUser)
@@ -330,7 +329,7 @@ namespace Flow::MsgServer {
         uint32_t msg_id = msg.msg_id();
         uint32_t session_type = msg.session_type();
 
-        RAW_LOG(ERROR,"HandleMsgReadNotify, user_id=%u, session_id=%u, session_type=%u, msg_id=%u. ", req_id, session_id, session_type, msg_id);
+        LOG(INFO)<<"HandleMsgReadNotify, user_id="<<req_id<<", session_id="<<session_id<<", session_type="<<session_type<<", msg_id="<< msg_id;
         CImUser* pUser = CImUserManager::GetInstance()->GetImUserById(req_id);
         if (pUser)
         {
@@ -346,7 +345,7 @@ namespace Flow::MsgServer {
         uint32_t from_user_id = msg.from_user_id();
         uint32_t to_user_id = msg.to_user_id();
 
-        RAW_LOG(ERROR,"HandleP2PMsg, %u->%u ", from_user_id, to_user_id);
+        LOG(INFO)<<"HandleP2PMsg, "<< from_user_id <<"->"<<to_user_id;
 
         CImUser* pFromImUser = CImUserManager::GetInstance()->GetImUserById(from_user_id);
         CImUser* pToImUser = CImUserManager::GetInstance()->GetImUserById(to_user_id);
@@ -367,7 +366,7 @@ namespace Flow::MsgServer {
 
         uint32_t user_id = msg.user_id();
         uint32_t result_count = msg.user_stat_list_size();
-        RAW_LOG(ERROR,"HandleUsersStatusResp, user_id=%u, query_count=%u ", user_id, result_count);
+        LOG(INFO)<<"HandleUsersStatusResp, user_id="<<user_id<<", query_count="<< result_count;
 
         CPduAttachData attach_data((uchar_t*)msg.attach_data().c_str(), msg.attach_data().length());
         if (attach_data.GetType() == ATTACH_TYPE_HANDLE)
@@ -391,12 +390,12 @@ namespace Flow::MsgServer {
             if (user_stat.status() == IM::BaseDefine::USER_STATUS_ONLINE)
             {
                 user_token->set_push_type(IM_PUSH_TYPE_SILENT);
-                RAW_LOG(ERROR,"HandleUsersStatusResponse, user id: %d, push type: normal. ", user_stat.user_id());
+                LOG(INFO)<<"HandleUsersStatusResponse, user id: "<<user_stat.user_id()<<", push type: normal. ";
             }
             else
             {
                 user_token->set_push_type(IM_PUSH_TYPE_NORMAL);
-                RAW_LOG(ERROR,"HandleUsersStatusResponse, user id: %d, push type: normal. ", user_stat.user_id());
+                LOG(INFO)<<"HandleUsersStatusResponse, user id: "<<user_stat.user_id()<<", push type: normal. ";
             }
             CImPdu pdu;
             pdu.SetPBMsg(&msg2);
@@ -433,7 +432,7 @@ namespace Flow::MsgServer {
             }
             else
             {
-                RAW_LOG(ERROR,"no file server ");
+                LOG(ERROR)<<"no file server ";
                 IM::File::IMFileRsp msg4;
                 msg4.set_result_code(1);
                 msg4.set_from_user_id(msg3.from_user_id());
@@ -462,7 +461,7 @@ namespace Flow::MsgServer {
 
         uint32_t user_id = msg.user_id();
         uint32_t session_id = msg.session_id();
-        RAW_LOG(ERROR,"HandleRemoveSessionNotify, user_id=%u, session_id=%u ", user_id, session_id);
+        LOG(INFO)<<"HandleRemoveSessionNotify, user_id="<<user_id<<", session_id="<< session_id;
         CImUser* pUser = CImUserManager::GetInstance()->GetImUserById(user_id);
         if (pUser)
         {
@@ -477,7 +476,7 @@ namespace Flow::MsgServer {
 
         uint32_t user_id = msg.user_id();
         uint32_t login_status = msg.login_status();
-        RAW_LOG(ERROR,"HandlePCLoginStatusNotify, user_id=%u, login_status=%u ", user_id, login_status);
+        LOG(INFO)<<"HandlePCLoginStatusNotify, user_id="<<user_id<<", login_status="<<login_status;
 
         CImUser* pUser = CImUserManager::GetInstance()->GetImUserById(user_id);
         if (pUser)
@@ -505,7 +504,7 @@ namespace Flow::MsgServer {
         IM::Buddy::IMSignInfoChangedNotify msg;
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
 
-        RAW_LOG(ERROR,"HandleSignInfoChangedNotify, changed_user_id=%u, sign_info=%s ", msg.changed_user_id(), msg.sign_info().c_str());
+        LOG(INFO)<<"HandleSignInfoChangedNotify, changed_user_id="<<msg.changed_user_id()<<", sign_info="<< msg.sign_info().c_str();
 
         // send friend online message to client
         CImUserManager::GetInstance()->BroadcastPdu(pPdu, CLIENT_TYPE_FLAG_BOTH);

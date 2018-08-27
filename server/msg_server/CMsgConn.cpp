@@ -55,14 +55,16 @@ namespace Flow::MsgServer {
 
         if (cur_time > g_last_stat_tick + LOG_MSG_STAT_INTERVAL) {
             g_last_stat_tick = cur_time;
-            RAW_LOG(ERROR, "up_msg_cnt=%u, up_msg_miss_cnt=%u, down_msg_cnt=%u, down_msg_miss_cnt=%u ",
-                    g_up_msg_total_cnt, g_up_msg_miss_cnt, g_down_msg_total_cnt, g_down_msg_miss_cnt);
+            LOG(INFO) << "up_msg_cnt=" << g_up_msg_total_cnt << ", up_msg_miss_cnt="
+                      << g_up_msg_miss_cnt
+                      << ", down_msg_cnt=" << g_down_msg_total_cnt << ", down_msg_miss_cnt=" << g_down_msg_miss_cnt;
+
         }
     }
 
     static void signal_handler_usr1(int sig_no) {
         if (sig_no == SIGUSR1) {
-            RAW_LOG(ERROR, "receive SIGUSR1 ");
+            LOG(ERROR) << "receive SIGUSR1 ";
             g_up_msg_total_cnt = 0;
             g_up_msg_miss_cnt = 0;
             g_down_msg_total_cnt = 0;
@@ -163,7 +165,7 @@ namespace Flow::MsgServer {
     }
 
     void CMsgConn::Close(bool kick_user) {
-        RAW_LOG(ERROR, "Close client, handle=%d, user_id=%u ", m_handle, GetUserId());
+        LOG(ERROR) << "Close client, handle=" << m_handle << ", user_id=" << GetUserId();
         if (m_handle != NETLIB_INVALID_HANDLE) {
             netlib_close(m_handle);
             g_msg_conn_map.erase(m_handle);
@@ -363,7 +365,7 @@ namespace Flow::MsgServer {
                 s_file_handler->HandleClientFileDelOfflineReq(this, pPdu);
                 break;
             default:
-                LOG(ERROR)<< "wrong msg, cmd id=" << pPdu << ", user id=" << GetUserId();
+                LOG(ERROR) << "wrong msg, cmd id=" << pPdu << ", user id=" << GetUserId();
                 break;
         }
     }
@@ -377,7 +379,7 @@ namespace Flow::MsgServer {
     void CMsgConn::_HandleLoginRequest(CImPdu *pPdu) {
         // refuse second validate request
         if (m_login_name.length() != 0) {
-            RAW_LOG(ERROR, "duplicate LoginRequest in the same conn ");
+            LOG(ERROR) << "duplicate LoginRequest in the same conn ";
             return;
         }
 
@@ -417,14 +419,14 @@ namespace Flow::MsgServer {
         std::string password = msg.password();
         uint32_t online_status = msg.online_status();
         if (online_status < IM::BaseDefine::USER_STATUS_ONLINE || online_status > IM::BaseDefine::USER_STATUS_LEAVE) {
-            RAW_LOG(ERROR, "HandleLoginReq, online status wrong: %u ", online_status);
+            LOG(ERROR) << "HandleLoginReq, online status wrong:  " << online_status;
             online_status = IM::BaseDefine::USER_STATUS_ONLINE;
         }
         m_client_version = msg.client_version();
         m_client_type = msg.client_type();
         m_online_status = online_status;
-        RAW_LOG(ERROR, "HandleLoginReq, user_name=%s, status=%u, client_type=%u, client=%s, ",
-                m_login_name.c_str(), online_status, m_client_type, m_client_version.c_str());
+        LOG(INFO) << "HandleLoginReq, user_name=" << m_login_name << ", status=" << online_status << ", client_type="
+                  << m_client_type << ", client= " << m_client_version;
         CImUser *pImUser = CImUserManager::GetInstance()->GetImUserByLoginName(GetLoginName());
         if (!pImUser) {
             pImUser = new CImUser(GetLoginName());
@@ -448,7 +450,7 @@ namespace Flow::MsgServer {
     }
 
     void CMsgConn::_HandleLoginOutRequest(CImPdu *pPdu) {
-        RAW_LOG(ERROR, "HandleLoginOutRequest, user_id=%d, client_type=%u. ", GetUserId(), GetClientType());
+        LOG(ERROR) << "HandleLoginOutRequest, user_id=" << GetUserId() << ", client_type=" << GetClientType();
         CDBServConn *pDBConn = get_db_serv_conn();
         if (pDBConn) {
             IM::Login::IMDeviceTokenReq msg;
@@ -478,10 +480,10 @@ namespace Flow::MsgServer {
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
         uint32_t user_id = GetUserId();
         if (!CHECK_CLIENT_TYPE_MOBILE(GetClientType())) {
-            RAW_LOG(ERROR, "HandleKickPCClient, user_id = %u, cmd must come from mobile client. ", user_id);
+            LOG(INFO)<< "HandleKickPCClient, user_id = "<<user_id<<", cmd must come from mobile client. ";
             return;
         }
-        RAW_LOG(ERROR, "HandleKickPCClient, user_id = %u. ", user_id);
+        LOG(INFO)<< "HandleKickPCClient, user_id =  "<<user_id;
 
         CImUser *pImUser = CImUserManager::GetInstance()->GetImUserById(user_id);
         if (pImUser) {
@@ -520,9 +522,8 @@ namespace Flow::MsgServer {
 
         IM::Buddy::IMRecentContactSessionReq msg;
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
-        RAW_LOG(ERROR, "HandleClientRecentContactSessionRequest, user_id=%u, latest_update_time=%u. ", GetUserId(),
-                msg.latest_update_time());
-
+        LOG(INFO) << "HandleClientRecentContactSessionRequest, user_id=" << GetUserId() << ", latest_update_time="
+                  << msg.latest_update_time();
         msg.set_user_id(GetUserId());
         // 请求最近联系会话列表
         CDbAttachData attach_data(ATTACH_TYPE_HANDLE, m_handle, 0);
@@ -535,17 +536,17 @@ namespace Flow::MsgServer {
         IM::Message::IMMsgData msg;
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
         if (msg.msg_data().length() == 0) {
-            RAW_LOG(ERROR, "discard an empty message, uid=%u ", GetUserId());
+            LOG(ERROR) << "discard an empty message, uid= " << GetUserId();
             return;
         }
 
         if (m_msg_cnt_per_sec >= MAX_MSG_CNT_PER_SECOND) {
-            RAW_LOG(ERROR, "!!!too much msg cnt in one second, uid=%u ", GetUserId());
+            LOG(ERROR) << "!!!too much msg cnt in one second, uid=" << GetUserId();
             return;
         }
 
         if (msg.from_user_id() == msg.to_session_id() && CHECK_MSG_TYPE_SINGLE(msg.msg_type())) {
-            RAW_LOG(ERROR, "!!!from_user_id == to_user_id. ");
+            LOG(INFO)<< "!!!from_user_id == to_user_id. ";
             return;
         }
 
@@ -557,8 +558,8 @@ namespace Flow::MsgServer {
         std::string msg_data = msg.msg_data();
 
         if (g_log_msg_toggle) {
-            RAW_LOG(ERROR, "HandleClientMsgData, %d->%d, msg_type=%u, msg_id=%u. ", GetUserId(), to_session_id,
-                    msg_type, msg_id);
+            LOG(INFO) << "HandleClientMsgData, " << GetUserId() << "->" << to_session_id << ", msg_type=" << msg_type
+                      << ", msg_id= " << msg_id;
         }
 
         uint32_t cur_time = time(NULL);
@@ -622,8 +623,8 @@ namespace Flow::MsgServer {
         uint32_t session_id = msg.session_id();
         uint32_t session_type = msg.session_type();
         uint32_t msg_cnt = msg.msg_id_list_size();
-        RAW_LOG(ERROR, "_HandleClientGetMsgByMsgIdRequest, req_id=%u, session_type=%u, session_id=%u, msg_cnt=%u.",
-                GetUserId(), session_type, session_id, msg_cnt);
+        LOG(INFO) << "_HandleClientGetMsgByMsgIdRequest, req_id=" << GetUserId() << ", session_type=" << session_type
+                  << ", session_id=" << session_id << ", msg_cnt=" << msg_cnt;
         CDBServConn *pDBConn = get_db_serv_conn_for_login();
         if (pDBConn) {
             CDbAttachData attach(ATTACH_TYPE_HANDLE, m_handle, 0);
@@ -635,7 +636,7 @@ namespace Flow::MsgServer {
     }
 
     void CMsgConn::_HandleClientUnreadMsgCntRequest(CImPdu *pPdu) {
-        RAW_LOG(ERROR, "HandleClientUnreadMsgCntReq, from_id=%u ", GetUserId());
+        LOG(INFO) << "HandleClientUnreadMsgCntReq, from_id=" << GetUserId();
         IM::Message::IMUnreadMsgCntReq msg;
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
 
@@ -655,9 +656,8 @@ namespace Flow::MsgServer {
         uint32_t session_type = msg.session_type();
         uint32_t session_id = msg.session_id();
         uint32_t msg_id = msg.msg_id();
-        RAW_LOG(ERROR, "HandleClientMsgReadAck, user_id=%u, session_id=%u, msg_id=%u, session_type=%u. ", GetUserId(),
-                session_id, msg_id, session_type);
-
+        LOG(INFO) << "HandleClientMsgReadAck, user_id=" << GetUserId() << ", session_id=" << session_id << ", msg_id="
+                  << msg_id << ", session_type=" << session_type;
         CDBServConn *pDBConn = get_db_serv_conn();
         if (pDBConn) {
             msg.set_user_id(GetUserId());
@@ -692,9 +692,8 @@ namespace Flow::MsgServer {
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
         uint32_t session_type = msg.session_type();
         uint32_t session_id = msg.session_id();
-        RAW_LOG(ERROR, "HandleClientGetMsgListRequest, user_id=%u, session_id=%u, session_type=%u. ", GetUserId(),
-                session_id, session_type);
-
+        LOG(INFO) << "HandleClientGetMsgListRequest, user_id=" << GetUserId() << ", session_id=" << session_id
+                  << ", session_type=" << session_type;
         CDBServConn *pDBConn = get_db_serv_conn();
         if (pDBConn) {
             CDbAttachData attach(ATTACH_TYPE_HANDLE, m_handle, 0);
@@ -713,7 +712,7 @@ namespace Flow::MsgServer {
         uint32_t from_user_id = msg.from_user_id();
         uint32_t to_user_id = msg.to_user_id();
 
-        RAW_LOG(ERROR, "HandleClientP2PCmdMsg, %u->%u, cmd_msg: %s ", from_user_id, to_user_id, cmd_msg.c_str());
+        LOG(INFO) << "HandleClientP2PCmdMsg, " << from_user_id << "->" << to_user_id << ", cmd_msg: " << cmd_msg;
 
         CImUser *pFromImUser = CImUserManager::GetInstance()->GetImUserById(GetUserId());
         CImUser *pToImUser = CImUserManager::GetInstance()->GetImUserById(to_user_id);
@@ -736,7 +735,7 @@ namespace Flow::MsgServer {
         IM::Buddy::IMUsersInfoReq msg;
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
         uint32_t user_cnt = msg.user_id_list_size();
-        RAW_LOG(ERROR, "HandleClientUserInfoReq, req_id=%u, user_cnt=%u ", GetUserId(), user_cnt);
+        LOG(INFO) << "HandleClientUserInfoReq, req_id=" << GetUserId() << ", user_cnt=" << user_cnt;
         CDBServConn *pDBConn = get_db_serv_conn_for_login();
         if (pDBConn) {
             CDbAttachData attach(ATTACH_TYPE_HANDLE, m_handle, 0);
@@ -752,9 +751,8 @@ namespace Flow::MsgServer {
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
         uint32_t session_type = msg.session_type();
         uint32_t session_id = msg.session_id();
-        RAW_LOG(ERROR, "HandleClientRemoveSessionReq, user_id=%u, session_id=%u, type=%u ", GetUserId(), session_id,
-                session_type);
-
+        LOG(INFO) << "HandleClientRemoveSessionReq, user_id=" << GetUserId() << ", session_id=" << session_id
+                  << ", type=" << session_type;
         CDBServConn *pConn = get_db_serv_conn();
         if (pConn) {
             CDbAttachData attach(ATTACH_TYPE_HANDLE, m_handle, 0);
@@ -788,7 +786,7 @@ namespace Flow::MsgServer {
         IM::Buddy::IMAllUserReq msg;
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
         uint32_t latest_update_time = msg.latest_update_time();
-        RAW_LOG(ERROR, "HandleClientAllUserReq, user_id=%u, latest_update_time=%u. ", GetUserId(), latest_update_time);
+        LOG(INFO) << "HandleClientAllUserReq, user_id=" << GetUserId() << ", latest_update_time=" << latest_update_time;
 
         CDBServConn *pConn = get_db_serv_conn();
         if (pConn) {
@@ -803,7 +801,7 @@ namespace Flow::MsgServer {
     void CMsgConn::_HandleChangeAvatarRequest(CImPdu *pPdu) {
         IM::Buddy::IMChangeAvatarReq msg;
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
-        RAW_LOG(ERROR, "HandleChangeAvatarRequest, user_id=%u ", GetUserId());
+        LOG(INFO) << "HandleChangeAvatarRequest, user_id= " << GetUserId();
         CDBServConn *pDBConn = get_db_serv_conn();
         if (pDBConn) {
             msg.set_user_id(GetUserId());
@@ -816,7 +814,7 @@ namespace Flow::MsgServer {
         IM::Buddy::IMUsersStatReq msg;
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
         uint32_t user_count = msg.user_id_list_size();
-        RAW_LOG(ERROR, "HandleClientUsersStatusReq, user_id=%u, query_count=%u.", GetUserId(), user_count);
+        LOG(INFO) << "HandleClientUsersStatusReq, user_id=" << GetUserId() << ", query_count=" << user_count;
 
         CRouteServConn *pRouteConn = get_route_serv_conn();
         if (pRouteConn) {
@@ -831,8 +829,7 @@ namespace Flow::MsgServer {
     void CMsgConn::_HandleClientDepartmentRequest(CImPdu *pPdu) {
         IM::Buddy::IMDepartmentReq msg;
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
-        RAW_LOG(ERROR, "HandleClientDepartmentRequest, user_id=%u, latest_update_time=%u.", GetUserId(),
-                msg.latest_update_time());
+        LOG(INFO)<< "HandleClientDepartmentRequest, user_id="<<GetUserId()<<", latest_update_time="<<msg.latest_update_time();
         CDBServConn *pDBConn = get_db_serv_conn();
         if (pDBConn) {
             CDbAttachData attach(ATTACH_TYPE_HANDLE, m_handle, 0);
@@ -845,13 +842,13 @@ namespace Flow::MsgServer {
 
     void CMsgConn::_HandleClientDeviceToken(CImPdu *pPdu) {
         if (!CHECK_CLIENT_TYPE_MOBILE(GetClientType())) {
-            RAW_LOG(ERROR, "HandleClientDeviceToken, user_id=%u, not mobile client.", GetUserId());
+            LOG(INFO)<< "HandleClientDeviceToken, user_id="<<GetUserId()<<", not mobile client.";
             return;
         }
         IM::Login::IMDeviceTokenReq msg;
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
         std::string device_token = msg.device_token();
-        RAW_LOG(ERROR, "HandleClientDeviceToken, user_id=%u, device_token=%s ", GetUserId(), device_token.c_str());
+        LOG(INFO)<< "HandleClientDeviceToken, user_id="<<GetUserId()<<", device_token="<<device_token;
 
         IM::Login::IMDeviceTokenRsp msg2;
         msg.set_user_id(GetUserId());
@@ -906,7 +903,7 @@ namespace Flow::MsgServer {
     void CMsgConn::_HandleChangeSignInfoRequest(CImPdu *pPdu) {
         IM::Buddy::IMChangeSignInfoReq msg;
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
-        RAW_LOG(ERROR, "HandleChangeSignInfoRequest, user_id=%u ", GetUserId());
+        LOG(INFO)<< "HandleChangeSignInfoRequest, user_id= "<< GetUserId();
         CDBServConn *pDBConn = get_db_serv_conn();
         if (pDBConn) {
             msg.set_user_id(GetUserId());
@@ -921,7 +918,7 @@ namespace Flow::MsgServer {
     void CMsgConn::_HandlePushShieldRequest(CImPdu *pPdu) {
         IM::Login::IMPushShieldReq msg;
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
-        RAW_LOG(ERROR, "_HandlePushShieldRequest, user_id=%u, shield_status ", GetUserId(), msg.shield_status());
+        LOG(INFO)<< "_HandlePushShieldRequest, user_id="<<GetUserId()<<", shield_status "<<msg.shield_status();
         CDBServConn *pDBConn = get_db_serv_conn();
         if (pDBConn) {
             msg.set_user_id(GetUserId());
@@ -936,7 +933,7 @@ namespace Flow::MsgServer {
     void CMsgConn::_HandleQueryPushShieldRequest(CImPdu *pPdu) {
         IM::Login::IMQueryPushShieldReq msg;
         CHECK_PB_PARSE_MSG(msg.ParseFromArray(pPdu->GetBodyData(), pPdu->GetBodyLength()));
-        RAW_LOG(ERROR, "HandleChangeSignInfoRequest, user_id=%u ", GetUserId());
+        LOG(INFO)<< "HandleChangeSignInfoRequest, user_id= "<< GetUserId();
         CDBServConn *pDBConn = get_db_serv_conn();
         if (pDBConn) {
             msg.set_user_id(GetUserId());

@@ -481,7 +481,7 @@ namespace Flow::MsgServer {
         CDbAttachData attach_data((uchar_t *) msg.attach_data().c_str(), msg.attach_data().length());
         uint32_t handle = attach_data.GetHandle();
 
-        RAW_LOG(INFO, "HandleMsgData, from_user_id=%u, to_user_id=%u, msg_id=%u.", from_user_id, to_user_id, msg_id);
+        LOG(INFO)<< "HandleMsgData, from_user_id="<<from_user_id<<", to_user_id="<<to_user_id<<", msg_id="<<msg_id;
 
         CMsgConn *pMsgConn = CImUserManager::GetInstance()->GetMsgConnByHandle(from_user_id, attach_data.GetHandle());
         if (pMsgConn) {
@@ -624,7 +624,7 @@ namespace Flow::MsgServer {
         uint32_t user_id = msg.user_id();
         uint32_t result = msg.result_code();
 
-        RAW_LOG(ERROR, "HandleChangeAvatarResp, user_id=%u, result=%u.", user_id, result);
+        LOG(INFO)<< "HandleChangeAvatarResp, user_id="<<user_id<<", result="<<result;
 
         CImUser *pUser = CImUserManager::GetInstance()->GetImUserById(user_id);
         if (NULL != pUser) {
@@ -641,9 +641,7 @@ namespace Flow::MsgServer {
         uint32_t user_id = msg.user_id();
         uint32_t latest_update_time = msg.latest_update_time();
         uint32_t dept_cnt = msg.dept_list_size();
-        RAW_LOG(ERROR,
-                "HandleDepartmentResponse, user_id=%u, latest_update_time=%u, dept_cnt=%u.", user_id,
-                latest_update_time, dept_cnt);
+        LOG(INFO)<< "HandleDepartmentResponse, user_id="<<user_id<<", latest_update_time="<<latest_update_time<<", dept_cnt="<<dept_cnt;
 
         CDbAttachData attach_data((uchar_t *) msg.attach_data().c_str(), msg.attach_data().length());
         uint32_t handle = attach_data.GetHandle();
