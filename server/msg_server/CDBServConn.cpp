@@ -173,6 +173,7 @@ namespace Flow::MsgServer {
             pdu.SetServiceId(SID_OTHER);
             pdu.SetCommandId(CID_OTHER_HEARTBEAT);
             SendPdu(&pdu);
+            LOG(INFO)<<"Send heart beat, curr_tick="<<curr_tick<<", m_last_send_tick="<<m_last_send_tick;
         }
 
         if (curr_tick > m_last_recv_tick + SERVER_TIMEOUT) {

@@ -2,6 +2,7 @@
 #include "CachePool.hpp"
 #include "DBPool.hpp"
 #include "CProxyConn.hpp"
+#include "CSyncCenter.hpp"
 #include <signal.h>
 #include <cstring>
 #include <glog/logging.h>
@@ -17,6 +18,9 @@
 #include <db_proxy_server/business/CSessionModel.hpp>
 #include <db_proxy_server/business/CFileModel.hpp>
 #include <base/common/OSType.hpp>
+#include <base/crypt/CAes.hpp>
+#include <curl/curl.h>
+
 namespace Flow{
     std::string strAudioEnc;
 }
@@ -113,8 +117,42 @@ int main(int argc, char **argv) {
         return -1;
     }
 
+    if(strlen(str_aes_key) != 32)
+    {
+        LOG(ERROR)<<"aes key is invalied";
+        return -2;
+    }
+    string strAesKey(str_aes_key, 32);
+    CAes cAes = CAes(strAesKey);
+    string strAudio = "[语音]";
+    char* pAudioEnc;
+    uint32_t nOutLen;
+    if(cAes.Encrypt(strAudio.c_str(), strAudio.length(), &pAudioEnc, nOutLen) == 0)
+    {
+        strAudioEnc.clear();
+        strAudioEnc.append(pAudioEnc, nOutLen);
+        cAes.Free(pAudioEnc);
+    }
+
+
+    string strFileSite(str_file_site);
+    CAudioModel::getInstance()->setUrl(strFileSite);
+
+
+
+    /// yunfan add 2014.9.28
+    // for 603 push
+    curl_global_init(CURL_GLOBAL_ALL);
+    /// yunfan add end
     uint16_t listen_port = atoi(str_listen_port);
     uint32_t thread_num = atoi(str_thread_num);
+
+    init_proxy_conn(thread_num);
+    CSyncCenter::getInstance()->init();
+    CSyncCenter::getInstance()->startSync();
+
+
+
 
     int ret = netlib_init();
 

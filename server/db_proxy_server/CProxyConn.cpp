@@ -137,7 +137,7 @@ namespace Flow{
         netlib_option(handle, NETLIB_OPT_GET_REMOTE_IP, (void*)&m_peer_ip);
         netlib_option(handle, NETLIB_OPT_GET_REMOTE_PORT, (void*)&m_peer_port);
 
-        LOG(ERROR)<<"connect from "<<m_peer_port<<", handle="<< m_handle;
+        LOG(INFO)<<"connect from "<<m_peer_port<<", handle="<< m_handle;
     }
 
 // 由于数据包是在另一个线程处理的，所以不能在主线程delete数据包，所以需要Override这个方法
@@ -186,6 +186,7 @@ namespace Flow{
             cPdu.SetServiceId(IM::BaseDefine::SID_OTHER);
             cPdu.SetCommandId(IM::BaseDefine::CID_OTHER_HEARTBEAT);
             SendPdu(&cPdu);
+            LOG(INFO)<<"Send heart beat, curr_tick="<<curr_tick<<", m_last_send_tick="<<m_last_send_tick;
         }
 
         if (curr_tick > m_last_recv_tick + SERVER_TIMEOUT) {

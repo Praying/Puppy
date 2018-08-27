@@ -8,31 +8,15 @@
 #include <base/network/Packet.hpp>
 #include <chrono>
 #include <sstream>
-#include <event.h>
 
 namespace Flow
 {
     namespace Util
     {
         uint64_t get_tick_count(){
-#ifdef _WIN32
-            LARGE_INTEGER liCounter;
-	LARGE_INTEGER liCurrent;
-
-	if (!QueryPerformanceFrequency(&liCounter))
-		return GetTickCount();
-
-	QueryPerformanceCounter(&liCurrent);
-	return (uint64_t)(liCurrent.QuadPart * 1000 / liCounter.QuadPart);
-#else
-            struct timeval tval;
-            uint64_t ret_tick;
-
-            gettimeofday(&tval, NULL);
-
-            ret_tick = tval.tv_sec * 1000L + tval.tv_usec / 1000L;
-            return ret_tick;
-#endif
+            std::chrono::time_point<std::chrono::system_clock,std::chrono::milliseconds> tp = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
+            auto tmp=std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch());
+            return  tmp.count();
         }
 
         bool stringToBool(std::string const &str)
