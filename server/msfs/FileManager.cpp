@@ -17,8 +17,7 @@ namespace Flow::MsfsServer {
         if (!isExist) {
             u64 ret = File::mkdirNoRecursion(m_disk);
             if (ret) {
-                RAW_LOG(ERROR,"The dir[%s] set error for code[%d], \
-				    its parent dir may no exists", m_disk, ret);
+                LOG(ERROR)<<"The dir["<<m_disk<<"] set error for code["<<ret<<"],its parent dir may no exists";
                 return -1;
             }
         }
@@ -31,7 +30,7 @@ namespace Flow::MsfsServer {
             std::string tmp = std::string(m_disk) + "/" + std::string(first);
             int code = File::mkdirNoRecursion(tmp.c_str());
             if (code && (errno != EEXIST)) {
-                RAW_LOG(ERROR,"Create dir[%s] error[%d]", tmp.c_str(), errno);
+                LOG(ERROR)<<"Create dir["<<tmp<<"] error["<<errno<<"]";
                 return -1;
             }
             for (int j = 0; j <= SECOND_DIR_MAX; j++) {
@@ -39,7 +38,7 @@ namespace Flow::MsfsServer {
                 std::string tmp2 = tmp + "/" + std::string(second);
                 code = File::mkdirNoRecursion(tmp2.c_str());
                 if (code && (errno != EEXIST)) {
-                    RAW_LOG(ERROR,"Create dir[%s] error[%d]", tmp2.c_str(), errno);
+                    LOG(ERROR)<<"Create dir["<<tmp2<<"] error["<<errno<<"]";
                     return -1;
                 }
                 memset(second, 0x0, 10);
@@ -73,8 +72,7 @@ namespace Flow::MsfsServer {
                                 char *url, char *ext) {
         //check file size
         if (size > MAX_FILE_SIZE_PER_FILE) {
-            RAW_LOG(ERROR,"File size[%d] should less than [%d]", size,
-                MAX_FILE_SIZE_PER_FILE);
+            LOG(ERROR)<<"File size["<<size<<"] should less than ["<<MAX_FILE_SIZE_PER_FILE<<"]";
             return -1;
         }
 
@@ -115,7 +113,7 @@ namespace Flow::MsfsServer {
     int FileManager::getRelatePathByUrl(const std::string &url, std::string &path) {
         std::string::size_type pos = url.find("/");
         if (std::string::npos == pos) {
-            RAW_LOG(ERROR,"Url [%s] format illegal.",url.c_str());
+            LOG(INFO)<<"Url ["<<url<<"] format illegal.";
             return -1;
         }
         path = url.substr(pos);
@@ -125,7 +123,7 @@ namespace Flow::MsfsServer {
     int FileManager::getAbsPathByUrl(const std::string &url, std::string &path) {
         std::string relate;
         if (getRelatePathByUrl(url, relate)) {
-            RAW_LOG(ERROR,"Get path from url[%s] error", url.c_str());
+            LOG(ERROR)<<"Get path from url["<<url<<"] error";
             return -1;
         }
         path = std::string(m_disk) + relate;
@@ -138,7 +136,7 @@ namespace Flow::MsfsServer {
         m_cs.Enter();
         EntryMap::iterator it = m_map.find(url);
         if (it != m_map.end()) {
-            RAW_LOG(ERROR,"the std::map has the file while url:%s", url.c_str());
+            LOG(ERROR)<<"the std::map has the file while url:"<< url;
             m_cs.Leave();
             return it->second;
         }
@@ -149,7 +147,7 @@ namespace Flow::MsfsServer {
 
         std::string path;
         if (getAbsPathByUrl(url, path)) {
-            RAW_LOG(ERROR,"Get abs path from url[%s] error", url.c_str());
+            LOG(ERROR)<<"Get abs path from url["<<url<<"] error";
             m_cs.Leave();
             return NULL;
         }
@@ -178,7 +176,7 @@ namespace Flow::MsfsServer {
         tmpFile->open();
         int ret = tmpFile->read(0, fileSize, e->m_fileContent);
         if (ret) {
-            RAW_LOG(ERROR,"read file error while url:%s", url.c_str());
+            LOG(ERROR)<<"read file error while url:"<< url;
             delete e;
             e = NULL;
             delete tmpFile;
@@ -192,7 +190,7 @@ namespace Flow::MsfsServer {
         std::pair < std::map <std::string, Entry*>::iterator, bool> result;
         result = m_map.insert(EntryMap::value_type(url, e));
         if (result.second == false) {
-            RAW_LOG(ERROR,"Insert url[%s] to file std::map error", url.c_str());
+            LOG(ERROR)<<"Insert url["<<url<<"] to file std::map error";
             delete e;
             e = NULL;
         }
@@ -204,7 +202,7 @@ namespace Flow::MsfsServer {
     int FileManager::downloadFileByUrl(char *url, void *buf, u32 *size) {
         Entry* en = getOrCreateEntry(url, true);
         if (!en) {
-            RAW_LOG(ERROR,"download file error, while url:%s", url);
+            LOG(ERROR)<<"download file error, while url:"<< url;
             return -1;
         }
         memcpy(buf, en->m_fileContent, en->m_fileSize);
@@ -264,7 +262,7 @@ namespace Flow::MsfsServer {
         m_cs.Enter();
         const Entry* entry = getEntry(url);
         if (!entry) {
-            RAW_LOG(ERROR,"std::map has not the url::%s", url.c_str());
+            LOG(ERROR)<<"std::map has not the url::"<< url;
             m_cs.Leave();
             return;
         }

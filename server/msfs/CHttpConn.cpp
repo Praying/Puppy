@@ -56,7 +56,7 @@ namespace Flow::MsfsServer {
                 pConn->OnClose();
                 break;
             default:
-                RAW_LOG(ERROR,"!!!httpconn_callback error msg: %d", msg);
+                LOG(ERROR)<<"!!!httpconn_callback error msg: "<< msg;
                 break;
         }
     }
@@ -163,7 +163,7 @@ namespace Flow::MsfsServer {
                         {
                             memcpy(szType, pPosType + 1, nTypeLen);
                             szType[nTypeLen] = 0;
-                            RAW_LOG(ERROR,"upload file, file name:%s", szFileName);
+                            LOG(INFO)<<"upload file, file name:"<< szFileName;
                             char szExtend[16];
                             const char* pPosExtend = Util::memfind(szFileName, nFileNameLen, "_", 1, false);
                             if(pPosExtend != NULL)
@@ -253,7 +253,7 @@ namespace Flow::MsfsServer {
                                             {
                                                 char url[128];
                                                 snprintf(url, sizeof(url), "{\"error_code\":8,\"error_msg\": \"格式错误\",\"path\":\"\",\"url\":\"\"}");
-                                                RAW_LOG(ERROR,"%s",url);
+                                                LOG(INFO)<<url;
                                                 uint32_t content_length = strlen(url);
                                                 pContent = new char[HTTP_RESPONSE_HTML_MAX];
                                                 snprintf(pContent, HTTP_RESPONSE_HTML_MAX, HTTP_RESPONSE_HTML, content_length,url);
@@ -264,7 +264,7 @@ namespace Flow::MsfsServer {
                                         {
                                             char url[128];
                                             snprintf(url, sizeof(url), "{\"error_code\":7,\"error_msg\": \"格式错误\",\"path\":\"\",\"url\":\"\"}");
-                                            RAW_LOG(ERROR,"%s",url);
+                                            LOG(INFO)<<url;
                                             uint32_t content_length = strlen(url);
                                             pContent = new char[HTTP_RESPONSE_HTML_MAX];
                                             snprintf(pContent, HTTP_RESPONSE_HTML_MAX, HTTP_RESPONSE_HTML, content_length,url);
@@ -276,7 +276,7 @@ namespace Flow::MsfsServer {
                                     {
                                         char url[128];
                                         snprintf(url, sizeof(url), "{\"error_code\":6,\"error_msg\": \"格式错误\",\"path\":\"\",\"url\":\"\"}");
-                                        RAW_LOG(ERROR,"%s",url);
+                                        LOG(INFO)<<url;
                                         uint32_t content_length = strlen(url);
                                         pContent = new char[HTTP_RESPONSE_HTML_MAX];
                                         snprintf(pContent, HTTP_RESPONSE_HTML_MAX, HTTP_RESPONSE_HTML, content_length,url);
@@ -287,7 +287,7 @@ namespace Flow::MsfsServer {
                                 {
                                     char url[128];
                                     snprintf(url, sizeof(url), "{\"error_code\":5,\"error_msg\": \"格式错误\",\"path\":\"\",\"url\":\"\"}");
-                                    RAW_LOG(ERROR,"%s",url);
+                                    LOG(INFO)<<url;
                                     uint32_t content_length = strlen(url);
                                     pContent = new char[HTTP_RESPONSE_HTML_MAX];
                                     snprintf(pContent, HTTP_RESPONSE_HTML_MAX, HTTP_RESPONSE_HTML, content_length,url);
@@ -298,7 +298,7 @@ namespace Flow::MsfsServer {
                             {
                                 char url[128];
                                 snprintf(url, sizeof(url), "{\"error_code\":4,\"error_msg\": \"格式错误\",\"path\":\"\",\"url\":\"\"}");
-                                RAW_LOG(ERROR,"%s",url);
+                                LOG(INFO)<<url;
                                 uint32_t content_length = strlen(url);
                                 pContent = new char[HTTP_RESPONSE_HTML_MAX];
                                 snprintf(pContent, HTTP_RESPONSE_HTML_MAX, HTTP_RESPONSE_HTML, content_length,url);
@@ -308,7 +308,7 @@ namespace Flow::MsfsServer {
                         else{
                             char url[128];
                             snprintf(url, sizeof(url), "{\"error_code\":9,\"error_msg\": \"格式错误\",\"path\":\"\",\"url\":\"\"}");
-                            RAW_LOG(ERROR,"%s",url);
+                            LOG(ERROR)<<url;
                             uint32_t content_length = strlen(url);
                             pContent = new char[HTTP_RESPONSE_HTML_MAX];
                             snprintf(pContent, HTTP_RESPONSE_HTML_MAX, HTTP_RESPONSE_HTML, content_length,url);
@@ -318,7 +318,7 @@ namespace Flow::MsfsServer {
                     else{
                         char url[128];
                         snprintf(url, sizeof(url), "{\"error_code\":10,\"error_msg\": \"格式错误\",\"path\":\"\",\"url\":\"\"}");
-                        RAW_LOG(ERROR,"%s",url);
+                        LOG(INFO)<<url;
                         uint32_t content_length = strlen(url);
                         pContent = new char[HTTP_RESPONSE_HTML_MAX];
                         snprintf(pContent, HTTP_RESPONSE_HTML_MAX, HTTP_RESPONSE_HTML, content_length,url);
@@ -328,7 +328,7 @@ namespace Flow::MsfsServer {
                 {
                     char url[128];
                     snprintf(url, sizeof(url), "{\"error_code\":11,\"error_msg\": \"格式错误\",\"path\":\"\",\"url\":\"\"}");
-                    RAW_LOG(ERROR,"%s",url);
+                    LOG(INFO)<<url;
                     uint32_t content_length = strlen(url);
                     pContent = new char[HTTP_RESPONSE_HTML_MAX];
                     snprintf(pContent, HTTP_RESPONSE_HTML_MAX, HTTP_RESPONSE_HTML, content_length,url);
@@ -339,7 +339,7 @@ namespace Flow::MsfsServer {
             {
                 char url[128];
                 snprintf(url, sizeof(url), "{\"error_code\":3,\"error_msg\": \"格式错误\",\"path\":\"\",\"url\":\"\"}");
-                RAW_LOG(ERROR,"%s",url);
+                LOG(INFO)<<url;
                 uint32_t content_length = strlen(url);
                 pContent = new char[HTTP_RESPONSE_HTML_MAX];
                 snprintf(pContent, HTTP_RESPONSE_HTML_MAX, HTTP_RESPONSE_HTML, content_length,url);
@@ -350,7 +350,7 @@ namespace Flow::MsfsServer {
         {
             char url[128];
             snprintf(url, sizeof(url), "{\"error_code\":2,\"error_msg\": \"格式错误\",\"path\":\"\",\"url\":\"\"}");
-            RAW_LOG(ERROR,"%s",url);
+            LOG(INFO)<<url;
             uint32_t content_length = strlen(url);
             pContent = new char[HTTP_RESPONSE_HTML_MAX];
             snprintf(pContent, HTTP_RESPONSE_HTML_MAX, HTTP_RESPONSE_HTML, content_length,url);
@@ -392,7 +392,7 @@ namespace Flow::MsfsServer {
                 char* pContent = new char[nTotalLen];
                 snprintf(pContent, nTotalLen, HTTP_RESPONSE_404);
                 CHttpConn::AddResponsePdu(m_ConnHandle, pContent, nTotalLen);
-                RAW_LOG(ERROR,"File size is invalied\n");
+                LOG(ERROR)<<"File size is invalied\n";
 
             }
         }
@@ -418,12 +418,12 @@ namespace Flow::MsfsServer {
             m_conn_handle = ++g_conn_handle_generator;
         }
 
-        //RAW_LOG(ERROR,"CHttpConn, handle=%u", m_conn_handle);
+
     }
 
     CHttpConn::~CHttpConn()
     {
-        //RAW_LOG(ERROR,"~CHttpConn, handle=%u", m_conn_handle);
+
     }
 
     int CHttpConn::Send(void* data, int len)
@@ -444,7 +444,7 @@ namespace Flow::MsfsServer {
         {
             m_out_buf.Write((char*) data + ret, len - ret);
             m_busy = true;
-            //RAW_LOG(ERROR,"not send all, remain=%d", m_out_buf.GetWriteOffset());
+            LOG(ERROR)<<"not send all, remain=" <<m_out_buf.GetWriteOffset();
         }
         else
         {
@@ -502,7 +502,7 @@ namespace Flow::MsfsServer {
         uint32_t buf_len = m_in_buf.GetWriteOffset();
         in_buf[buf_len] = '\0';
 
-        //RAW_LOG(ERROR,"OnRead, buf_len=%u, conn_handle=%u", buf_len, m_conn_handle); // for debug
+        LOG(ERROR)<<"OnRead, buf_len="<<buf_len<<", conn_handle="<< m_conn_handle; // for debug
 
 
         m_HttpParser.ParseHttpContent(in_buf, buf_len);
@@ -510,7 +510,7 @@ namespace Flow::MsfsServer {
         if (m_HttpParser.IsReadAll())
         {
             std::string strUrl = m_HttpParser.GetUrl();
-            RAW_LOG(ERROR,"IP:%s access:%s", m_peer_ip.c_str(), strUrl.c_str());
+            LOG(INFO)<<"IP:"<<m_peer_ip<<" access:" <<strUrl.c_str();
             if (strUrl.find("..") != strUrl.npos) {
                 Close();
                 return;
@@ -519,10 +519,10 @@ namespace Flow::MsfsServer {
             if (m_HttpParser.GetContentLen() > HTTP_UPLOAD_MAX)
             {
                 // file is too big
-                RAW_LOG(ERROR,"content  is too big");
+                LOG(INFO)<<"content  is too big";
                 char url[128];
                 snprintf(url, sizeof(url), "{\"error_code\":1,\"error_msg\": \"上传文件过大\",\"url\":\"\"}");
-                RAW_LOG(ERROR,"%s",url);
+                LOG(INFO)<<url;
                 uint32_t content_length = strlen(url);
                 char pContent[1024];
                 snprintf(pContent, sizeof(pContent), HTTP_RESPONSE_HTML, content_length,url);
@@ -540,7 +540,7 @@ namespace Flow::MsfsServer {
                 }
                 catch(...)
                 {
-                    RAW_LOG(ERROR,"not enough memory");
+                    LOG(ERROR)<<"not enough memory";
                     char szResponse[HTTP_RESPONSE_500_LEN + 1];
                     snprintf(szResponse, HTTP_RESPONSE_500_LEN, "%s", HTTP_RESPONSE_500);
                     Send(szResponse, HTTP_RESPONSE_500_LEN);
@@ -584,7 +584,7 @@ namespace Flow::MsfsServer {
         if (ret < out_buf_size)
         {
             m_busy = true;
-//        RAW_LOG(ERROR,"not send all, remain=%d", m_out_buf.GetWriteOffset());
+//        LOG(ERROR)<<"not send all, remain=%d", m_out_buf.GetWriteOffset());
         } else
         {
             m_busy = false;
@@ -601,7 +601,7 @@ namespace Flow::MsfsServer {
     {
         if (curr_tick > m_last_recv_tick + HTTP_CONN_TIMEOUT)
         {
-            RAW_LOG(ERROR,"HttpConn timeout, handle=%d", m_conn_handle);
+            LOG(INFO)<<"HttpConn timeout, handle="<< m_conn_handle;
             Close();
         }
     }

@@ -80,12 +80,10 @@ void http_callback(void* callback_data, uint8_t msg, uint32_t handle,
     if (msg == NETLIB_MSG_CONNECT)
     {
         CHttpConn* pConn = new CHttpConn();
-//        CHttpTask* pTask = new CHttpTask(handle, pConn);
-//        g_ThreadPool.AddTask(pTask);
         pConn->OnConnect(handle);
     } else
     {
-        RAW_LOG(ERROR,"!!!error msg: %d", msg);
+        LOG(ERROR)<<"!!!error msg: " << msg;
     }
 }
 
@@ -96,11 +94,11 @@ void doQuitJob()
     config_file.SetConfigValue("FileCnt", fileCntBuf);
     FileManager::destroyInstance();
     netlib_destroy();
-    RAW_LOG(ERROR,"I'm ready quit...");
+    LOG(ERROR)<<"I'm ready quit...";
 }
 void Stop(int signo)
 {
-    RAW_LOG(ERROR,"receive signal:%d", signo);
+    LOG(INFO)<<"receive signal:"<< signo;
     switch(signo)
     {
         case SIGINT:
@@ -129,7 +127,7 @@ int main(int argc, char* argv[])
         }
     }
     google::InitGoogleLogging(argv[0]);
-    RAW_LOG(INFO,"MsgServer max files can open: %d", getdtablesize());
+    LOG(INFO)<<"MsgServer max files can open: "<< getdtablesize();
 
 
     char* listen_ip = config_file.GetConfigName("ListenIP");
@@ -142,11 +140,11 @@ int main(int argc, char* argv[])
 
     if (!listen_ip || !str_listen_port || !base_dir || !str_file_cnt || !str_files_per_dir || !str_post_thread_count || !str_get_thread_count)
     {
-        RAW_LOG(ERROR,"config file miss, exit...");
+        LOG(ERROR)<<"config file miss, exit...";
         return -1;
     }
 
-    RAW_LOG(INFO,"%s,%s",listen_ip, str_listen_port);
+    LOG(INFO)<<listen_ip<<","<<str_listen_port;
     uint16_t listen_port = atoi(str_listen_port);
     long long int  fileCnt = atoll(str_file_cnt);
     int filesPerDir = atoi(str_files_per_dir);
@@ -154,7 +152,7 @@ int main(int argc, char* argv[])
     int nGetThreadCount = atoi(str_get_thread_count);
     if(nPostThreadCount <= 0 || nGetThreadCount <= 0)
     {
-        RAW_LOG(ERROR,"thread count is invalied");
+        LOG(ERROR)<<"thread count is invalied";
         return -1;
     }
     g_PostThreadPool.Init(nPostThreadCount);
