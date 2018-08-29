@@ -19,40 +19,40 @@
 
 #define LOG_MODULE_SOCKET   "SOCKET"
 
-#include <glog/logging.h>
-#include <glog/raw_logging.h>
+#include "../PushDefine.hpp"
+
 
 #define __FILENAME__ (strrchr(__FILE__, '/') ? (strrchr(__FILE__, '/') + 1):__FILE__)
 
 #define SOCKET_IO_FATAL(fmt, ...) \
 {\
- RAW_LOG(FATAL,"<%s>|<%d>|<%s>," fmt, __FILENAME__, __LINE__, __FUNCTION__, ##__VA_ARGS__);\
+ LOG(FATAL)<<string_format(fmt,...);\
 }
 
 
 #define SOCKET_IO_ERROR(fmt, ...) \
 {\
-    RAW_LOG(ERROR,"<%s>|<%d>|<%s>," fmt, __FILENAME__, __LINE__, __FUNCTION__, ##__VA_ARGS__);\
+   LOG(ERROR)<<string_format(fmt,##__VA_ARGS__);\
 }
 
 #define SOCKET_IO_WARN(fmt, ...)  \
 {\
-    RAW_LOG(WARNING, "<%s>|<%d>|<%s>," fmt, __FILENAME__, __LINE__, __FUNCTION__, ##__VA_ARGS__);\
+    LOG(WARNING)<<string_format(fmt,##__VA_ARGS__);\
 }
 
 #define SOCKET_IO_INFO(fmt, ...)  \
 {\
-    RAW_LOG(INFO, "<%s>|<%d>|<%s>," fmt, __FILENAME__, __LINE__, __FUNCTION__, ##__VA_ARGS__);\
+   LOG(INFO)<<string_format(fmt,##__VA_ARGS__);\
 }
 
 #define SOCKET_IO_DEBUG(fmt, ...)  \
 {\
-    RAW_LOG(INFO, "<%s>|<%d>|<%s>," fmt, __FILENAME__, __LINE__, __FUNCTION__, ##__VA_ARGS__);\
+   LOG(INFO)<<string_format(fmt,##__VA_ARGS__);\
 }
 
 #define SOCKET_IO_TRACE(fmt, ...)  \
 {\
-    RAW_LOG(ERROR, "<%s>|<%d>|<%s>," fmt, __FILENAME__, __LINE__, __FUNCTION__, ##__VA_ARGS__);\
+   LOG(FATAL)<<string_format(fmt,##__VA_ARGS__);\
 }
 
 
