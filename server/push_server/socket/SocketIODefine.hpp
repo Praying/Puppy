@@ -52,7 +52,7 @@
 
 #define SOCKET_IO_TRACE(fmt, ...)  \
 {\
-   LOG(FATAL)<<string_format(fmt,##__VA_ARGS__);\
+   LOG(ERROR)<<string_format(fmt,##__VA_ARGS__);\
 }
 
 
