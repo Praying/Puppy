@@ -44,5 +44,6 @@ int main(int argc, const char * argv[]) {
     while (true) {
         S_Sleep(1000);
     }
+    google::ShutdownGoogleLogging();
     return 0;
 }
