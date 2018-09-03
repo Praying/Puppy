@@ -82,7 +82,7 @@ namespace Flow{
             // 建议配置4个实例，这样更新BusinessServer时，不会影响业务
             if (total_db_instance < 2) {
                 LOG(ERROR)<<"DBServerIP need 2 instance at lest";
-                exit(1);
+                //exit(1);
             }
 
             g_db_server_login_count = (total_db_instance / 2) * concur_conn_cnt;
