@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 
 	signal(SIGPIPE, SIG_IGN);
 	srand(time(NULL));
-
+	google::InitGoogleLogging(argv[0]);
 	ConfigFileReader config_file("routeserver.conf");
 
 	char* listen_ip = config_file.GetConfigName("ListenIP");
